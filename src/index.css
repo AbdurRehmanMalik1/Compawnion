@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #4f46e5;
+  /* Indigo 600 */
+  --color-secondary: #10b981;
+  /* Emerald 500 */
+  --color-accent: #f59e0b;
+  /* Amber 500 */
+  --color-dark: #1f2937;
+  /* Gray 800 */
+  --color-light: #f9fafb;
+  /* Gray 50 */
+  --color-text: #111827;
+  /* Gray 900 */
+}
