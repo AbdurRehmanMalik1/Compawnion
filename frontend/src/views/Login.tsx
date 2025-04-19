@@ -1,5 +1,20 @@
+import axios from "axios";
+import { useEffect } from "react";
+import { apiUrl } from "../config";
+
 const Login = () => {
     const inputClass: string = 'w-100 px-4 py-2 rounded-[8px] shadow-sm outline-none';
+
+
+    useEffect(() => {
+        axios.get(apiUrl)
+            .then(response => {
+                console.log(response.data);
+            }).catch(err => {
+                console.error(err);
+            })
+    }, [])
+
     return (
         <div className="flex flex-row h-screen">
             <div style={{ background: 'black', width: '50%' }}>
