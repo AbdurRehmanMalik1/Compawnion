@@ -1,10 +1,8 @@
-type Props = {}
-
-const inputClass : string = 'w-100 px-4 py-2 rounded-[8px] shadow-sm outline-none';
-const Login = (props: Props) => {
+const Login = () => {
+    const inputClass: string = 'w-100 px-4 py-2 rounded-[8px] shadow-sm outline-none';
     return (
         <div className="flex flex-row h-screen">
-            <div style={{background:'black',width:'50%'}}>
+            <div style={{ background: 'black', width: '50%' }}>
             </div>
             <form className="mt-20 flex flex-col gap-y-20 m-auto">
                 <h1 className="text-4xl text-center font-medium">Compawnion</h1>
