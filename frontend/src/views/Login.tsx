@@ -1,26 +1,12 @@
-import axios from "axios";
-import { useEffect } from "react";
-import { apiUrl } from "../config";
-
 const Login = () => {
-    const inputClass: string = 'w-100 px-4 py-2 rounded-[8px] shadow-sm outline-none';
-
-
-    useEffect(() => {
-        axios.get(apiUrl)
-            .then(response => {
-                console.log(response.data);
-            }).catch(err => {
-                console.error(err);
-            })
-    }, [])
-
+    const inputClass: string = 'w-md px-4 py-2 rounded-[8px] shadow-sm outline-none'
     return (
         <div className="flex flex-row h-screen">
-            <div style={{ background: 'black', width: '50%' }}>
+            <div className="bg-black hidden md:block lg:w-1/2 md:w-[40%]">
+                <img src='/login-cat-background.jpeg' className="w-full h-full object-cover" />
             </div>
-            <form className="mt-20 flex flex-col gap-y-20 m-auto">
-                <h1 className="text-4xl text-center font-medium">Compawnion</h1>
+            <form className="mt-20 flex flex-col gap-y-16 m-auto py-12">
+                <h1 className="text-4xl text-center font-medium mb-10">Compawnion</h1>
                 <input className={inputClass} type="email" placeholder='Email Address' />
                 <input className={inputClass} type="password" placeholder='Password' />
                 <div className="flex flex-row justify-between items-center">
