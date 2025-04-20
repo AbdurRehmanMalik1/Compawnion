@@ -1,6 +1,6 @@
 import './App.css'
 import Login from './views/Login'
-function App() {
+const App = () => {
   return (
     <>
       <Login />
