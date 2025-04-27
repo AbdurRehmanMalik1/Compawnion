@@ -1,9 +1,11 @@
-import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
+dotenv.config();
+
+import express, { Request, Response } from 'express';
+
 import cors from 'cors';
 import loginRouter from './login/login.controller';
 
-dotenv.config();
 
 import MongooseError from './mongo.connection';
 
