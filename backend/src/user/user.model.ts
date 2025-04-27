@@ -11,13 +11,13 @@ const userSchema = new mongoose.Schema({
         unique: true
     },
     password: {
-        type: String,
+        type: String,   
         required: true
     },
-    age: {
-        type: Number,
-        required: false
-    },
+    // age: {
+    //     type: Number,
+    //     required: false
+    // },
     createdAt: {
         type: Date,
         default: Date.now
