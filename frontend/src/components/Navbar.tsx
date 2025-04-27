@@ -1,5 +1,5 @@
-import { ReactElement } from "react";
 import { NavLink } from "react-router";
+import '../style/Navbar.css';
 
 const navItems = [
     {
@@ -11,55 +11,44 @@ const navItems = [
     }, {
         name: 'Account',
         items: ['Login', 'Signup']
-    }, {
-        name: 'Login'
     }
 ];
 
 
-const NavDropDown = ({ children }: { children: ReactElement }) => {
+const NavDropDown = ({ items }: { items: Array<string> }) => {
     return (
-        <div className="absolute">
+        <ul className="w-full text-center absolute hidden rounded-b-xl top-full px-2 
+        pb-2 left-0 bg-[var(--color-primary-dark)] group-hover:flex flex-col text-white
+        z-10
+        ">
             {
-                children
+                items.map(item =>
+                    <NavLink key={item} to={item.toLowerCase()}
+                        className={({ isActive }: { isActive: boolean }) => `border-white px-2 py-1 ${isActive ? 'border-b font-bold' : ''}`}
+                    >
+                        {item}</NavLink>
+                )
             }
-        </div>
+        </ul>
     )
 }
 const Navbar = () => {
-    // const DropDown  = useCallback((item-list)=>{
-    //     return(
-
-    //     )
-    // },[]);
     const navLinkClass = ({ isActive }: { isActive: boolean }) => {
-        return `${isActive ? 'bg-[var(--color-primary-dark)] h-[100%] py-[2vh] border-box' : ''} px-6 hover:bg-[var(--color-primary-dark)] hover:h-[100%] hover:py-[2vh]`;
+        return `${isActive ? 'bg-[var(--color-primary-dark)]' : ''} border-box px-6 group-hover:bg-[var(--color-primary-dark)] h-[100%] py-[2vh]`;
     }
 
     return (
         <nav>
             <ul className="bg-[var(--color-primary)] text-white flex flex-row h-[8vh] justify-around items-center">
                 {
-                    navItems.map(({ name, items }, index) => {
-                        return (
-                            <div className="relative flex flex-col" key={index}>
-                                <NavLink to={name.toLowerCase()} className={navLinkClass}>
-                                    {name}
-                                </NavLink>
-                                {
-                                    items && <NavDropDown>
-                                        {
-                                            <>
-                                                {
-
-                                                }
-                                            </>
-                                        }
-                                    </NavDropDown>
-                                }
-                            </div>
-                        )
-                    })
+                    navItems.map(({ name, items }, index) =>
+                        <li className="group relative flex flex-col" key={index}>
+                            <NavLink to={name.toLowerCase()} className={navLinkClass}>
+                                {name}
+                            </NavLink>
+                            {items && <NavDropDown items={items} />}
+                        </li>
+                    )
                 }
             </ul>
         </nav>
