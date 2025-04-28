@@ -23,7 +23,6 @@ function formatError(statusCode: number, defaultStatusPhrase: string) {
 
             return response;
         };
-        console.log('Here Error:', err.toJSON());
 
         if (originalError) {
             err.originalError = originalError;
@@ -46,12 +45,12 @@ const Conflict = formatError(409, 'Conflict');
 
 const ExceptionHandler = () => {
     return (err: any, req: Request, res: Response, next: NextFunction): any => {
-        console.log('Err Obj: ', err)
         if (err.toJSON) {
             const errorResponse = err.toJSON();
-            console.log('Erorr Reponse2: ', errorResponse)
             return res.status(errorResponse.statusCode).json(errorResponse);
         }
+
+        console.log('Error Log: ', err);
         return res.status(500).json({
             statusCode: 500,
             error: {
@@ -63,7 +62,7 @@ const ExceptionHandler = () => {
 }
 
 
-const HttpExecptions = {
+const HttpExceptions = {
     BadRequest,
     Unauthorized,
     PaymentRequired,
@@ -77,4 +76,4 @@ const HttpExecptions = {
     ExceptionHandler
 };
 
-export default HttpExecptions;
+export default HttpExceptions;

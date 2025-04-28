@@ -1,32 +1,31 @@
-import User from "./user.model";
-import bcrypt from "bcrypt";
-
-
+import { MongoError } from "mongodb";
+import HttpExceptions from "../utility/exceptions/HttpExceptions";
+import User, { UserModel } from "./user.model";
+import CustomMongoError from "../utility/exceptions/mongodb.exceptions";
+import mongoose, { Model } from "mongoose";
 
 export const userService = {
-
-    async hashPassword(password: string) {
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-        return hashedPassword;
-    },
-
     async createUser(name: string, email: string, password: string): Promise<any> {
-        const hashedPassword = await this.hashPassword(password);
+        // if (await this.findByEmail(email))
+        //     throw HttpExceptions.Conflict('Email already in use');
+
         const testUser = new User({
             name,
             email,
-            password: hashedPassword,
+            password,
         });
-
         try {
             const savedUser = await testUser.save();
-            console.log(savedUser);
-            return { message: 'User added successfully', user: savedUser };
+            // console.log(savedUser);
+            return savedUser;
         } catch (err) {
-            console.error('Error adding user:', err);
-            return { message: 'Error adding user', error: err };
+            if (err instanceof MongoError && err.code === CustomMongoError.DuplicateKey) {
+                throw HttpExceptions.Conflict('Email already in use');
+            }
+            throw err;
         }
-        return name;
+    },
+    async findByEmail(email: string): Promise<UserModel | null> {
+        return await User.findOne({ email: email })
     }
 }

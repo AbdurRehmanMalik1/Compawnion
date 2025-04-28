@@ -1,23 +1,28 @@
-import express, { NextFunction, Request, Response, Router } from 'express';
+import express, { Request, Response, Router } from 'express';
 import { signupService } from './signup.service';
-import HttpExecptions from '../utility/exceptions/HttpError';
+import HttpExceptions from '../utility/exceptions/HttpExceptions';
 
 const signUpRouter: Router = express.Router();
 
-signUpRouter.post('/', (req: Request, res: Response): any => {
+signUpRouter.post('/', async (req: Request, res: Response): Promise<any> => {
+    if(!req.body)
+        throw HttpExceptions.BadRequest('Missing Signup Details');
+    
     const { name, email, password }: { name: string, email: string, password: string } = req.body;
 
     if (!name || !name.trim()) {
-        throw HttpExecptions.BadRequest('Missing/Invalid Name');
+        throw HttpExceptions.BadRequest('Missing/Invalid Name');
     }
     if (!email || !email.trim()) {
-        throw HttpExecptions.BadRequest('Missing/Invalid Email');
+        throw HttpExceptions.BadRequest('Missing/Invalid Email');
     }
     if (!password || !password.trim()) {
-        throw HttpExecptions.BadRequest('Missing/Invalid Password');
+        throw HttpExceptions.BadRequest('Missing/Invalid Password');
     }
+    const user = await signupService.signUp(name, email, password);
 
-    return res.status(200).json({ message: 'Ok Sign up' });
+
+    return res.status(200).json({ message: 'Signup Successful', user: user });
 });
 
 

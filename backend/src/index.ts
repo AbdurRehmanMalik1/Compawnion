@@ -8,7 +8,7 @@ import loginRouter from './login/login.controller';
 
 import MongooseError from './mongo.connection';
 import signUpRouter from './signup/signup.controller';
-import HttpExecptions from './utility/exceptions/HttpError';
+import HttpExecptions from './utility/exceptions/HttpExceptions';
 
 
 function main() {

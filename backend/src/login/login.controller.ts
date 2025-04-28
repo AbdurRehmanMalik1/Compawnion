@@ -1,31 +1,29 @@
 import express, { Request, Response, Router } from 'express';
 import { loginService } from './login.service';
-import User from '../user/user.model';
+import HttpExceptions from '../utility/exceptions/HttpExceptions';
 
 const loginRouter: Router = express.Router();
 
-loginRouter.get('/', (req: Request, res: Response) => {
-    const data: string = 'Bro';
-    
-    loginService.login(data);
-});
+// loginRouter.get('/', (req: Request, res: Response) => {
+//     const data: string = 'Bro';
 
-loginRouter.get('/testUser', async (req: Request, res: Response) => {
-    const testUser = new User({
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        password:'1234',
-        age: 30,
-    });
+// });
 
-    try {
-        const savedUser = await testUser.save();
-        console.log(savedUser);
-        res.status(201).json({ message: 'User added successfully', user: savedUser });
-    } catch (err) {
-        console.error('Error adding user:', err);
-        res.status(500).json({ message: 'Error adding user', error: err });
+loginRouter.post('/', async (req: Request, res: Response): Promise<any> => {
+    if(!req.body)
+        throw HttpExceptions.BadRequest('Missing Login Details');
+
+    const { email, password }: { email: string, password: string } = req.body;
+
+    if (!email || !email.trim()) {
+        throw HttpExceptions.BadRequest('Missing Email');
     }
+    if (!password || !password.trim()) {
+        throw HttpExceptions.BadRequest('Missing Password');
+    }
+    const message = await loginService.login(email, password);
+
+    return res.status(200).json({ message })
 });
 
 export default loginRouter;
