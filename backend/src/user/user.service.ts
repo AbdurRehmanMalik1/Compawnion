@@ -6,8 +6,8 @@ import mongoose, { Model } from "mongoose";
 
 export const userService = {
     async createUser(name: string, email: string, password: string): Promise<any> {
-        // if (await this.findByEmail(email))
-        //     throw HttpExceptions.Conflict('Email already in use');
+        if (await this.findByEmail(email))
+            throw HttpExceptions.Conflict('Email already in use');
 
         const testUser = new User({
             name,
