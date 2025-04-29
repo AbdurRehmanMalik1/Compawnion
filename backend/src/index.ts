@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 
 import cors from 'cors';
 import loginRouter from './login/login.controller';
@@ -19,17 +19,14 @@ function main() {
   }
 
   const app = express();
-  const PORT: string = process.env.PORT || '3000';
-
+  const PORT: string = process.env.PORT || '8000';
 
   app.use(cors());
   app.use(express.json());
  
-
   app.use('/signup', signUpRouter);
   app.use('/login', loginRouter);
-
-  app.get('/', (req: Request, res: Response) => {
+  app.get('/', (_req: Request, res: Response) => {
     res.json({ message: 'Hello from Express + TypeScript!' });
   });
 

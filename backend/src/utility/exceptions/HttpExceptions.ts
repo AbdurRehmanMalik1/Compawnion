@@ -43,7 +43,11 @@ const ProxyAuthenticationRequired = formatError(407, 'Proxy Authentication Requi
 const RequestTimeout = formatError(408, 'Request Timeout');
 const Conflict = formatError(409, 'Conflict');
 
+/**
+ * @returns Error Handler Middlware
+ */
 const ExceptionHandler = () => {
+
     return (err: any, req: Request, res: Response, next: NextFunction): any => {
         if (err.toJSON) {
             const errorResponse = err.toJSON();

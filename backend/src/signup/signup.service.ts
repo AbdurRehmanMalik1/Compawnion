@@ -1,7 +1,6 @@
 import { userService } from "../user/user.service"
 import { hash as bcryptHash } from 'bcrypt';
 
-
 export const signupService = {
     async hashPassword(password: string) {
         const saltRounds = 10;
