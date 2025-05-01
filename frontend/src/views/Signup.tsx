@@ -1,19 +1,24 @@
+import axios from "axios";
 import { useState } from "react";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
+import { apiUrl } from "../apiconfig";
+import { getAxiosErrorData } from "../utility";
 
 interface SignupForm {
-    username: string,
+    name: string,
     email: string,
     password: string
 }
 const Signup = () => {
+    const [error, setError] = useState<string>('');
+    const navigate = useNavigate();
     const [formData, setFormData] = useState<SignupForm>({
-        username: '',
+        name: '',
         email: '',
         password: '',
     });
     const inputRow: string = "flex relative items-center border-b pb-2 border-gray-200 focus-within:border-black";
-    const inputClass: string = "w-md px-4 py-2 outline-none flex-grow";
+    const inputClass: string = "w-md px-4 py-2 outline-none flex-grow bg-white  ";
     const LinkStyle: string = "no-underline text-inherit";
     const PageButton: string = `${LinkStyle} text-end bg-[var(--color-primary)] rounded-bl-xl rounded-tl-xl px-3 py-1`;
     const ActivePageButton: string = `${LinkStyle} text-end bg-[var(--color-secondary)] rounded-bl-xl rounded-tl-xl px-3 py-1`;
@@ -26,10 +31,19 @@ const Signup = () => {
 
     const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const { username, email, password } = formData;
-        console.log(username);
-        console.log(email);
-        console.log(password);
+        const { name, email, password } = formData;
+        axios.post(`${apiUrl}/signup`, { name, email, password })
+            .then((_res) => {
+                //const data = res.data;
+                setError('')
+                navigate('verifyCode', { state: { name, email, password } });
+            }).catch(err => {
+                const data  = getAxiosErrorData(err);
+                if (data.error)
+                    setError(data.error?.message);
+                else
+                    setError('Unknown Error');
+            })
     }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -45,7 +59,7 @@ const Signup = () => {
         isActive ? CenterLeftActivePageButton : CenterLeftPageButton;
     const toggleCenterRightPageButtonClass = ({ isActive }: { isActive: boolean }) =>
         isActive ? CenterRightActivePageButton : CenterRightPageButton;
-    console.log(formData);
+
     return (
         <div className="flex justify-center md:grid md:grid-cols-[1fr_600px]">
             <div className="bg-black hidden md:flex md:flex-row relative">
@@ -63,7 +77,7 @@ const Signup = () => {
                 </div>
                 <div className={inputRow}>
                     <img className={inputIcon} src="username_icon.png" />
-                    <input name="username" onChange={handleChange} className={inputClass} type="text" placeholder="Username" />
+                    <input name="name" onChange={handleChange} className={inputClass} type="text" placeholder="Username" />
                 </div>
                 <div className={inputRow}>
                     <img className={inputIcon} src="email_icon.jpg" />
@@ -73,9 +87,14 @@ const Signup = () => {
                     <img className={inputIcon} src="password_icon.png" />
                     <input name="password" onChange={handleChange} className={inputClass} type="password" placeholder="Password" />
                 </div>
-
-
-                <div className="flex flex-row justify-center items-center mt-6">
+                {
+                    error && 
+                    <div className="flex flex-row items-center justify-center text-[var(--color-error-red)] mt-[-10px] mb-[-10px]">
+                        <img width={30} className="inputIcon" src="error_warning_icon.jpg"/>
+                        <label>{error}</label>
+                    </div>
+                }
+                <div className="flex flex-row justify-center items-center mt-0">
                     <button type="submit"
                         className="bg-[var(--color-primary)] text-white cursor-pointer rounded-[40px] font-medium px-6 py-2 sm:px-10 sm:py-3">Sign Up
                     </button>
