@@ -1,15 +1,9 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
-import express, { Request, Response } from 'express';
-
-import cors from 'cors';
-import loginRouter from './login/login.controller';
-
-import MongooseError from './mongo.connection';
-import signUpRouter from './signup/signup.controller';
-import HttpExecptions from './utility/exceptions/HttpExceptions';
-
+import express, { Request, Response } from "express";
+import cors from "cors";
+import { config } from "./config";
+import MongooseError from "./mongo.connection";
+import HttpExecptions from "./utility/exceptions/HttpExceptions";
+import routes from "./routes";
 
 function main() {
   if (MongooseError !== null) {
@@ -19,21 +13,20 @@ function main() {
   }
 
   const app = express();
-  const PORT: string = process.env.PORT || '8000';
 
   app.use(cors());
   app.use(express.json());
- 
-  app.use('/signup', signUpRouter);
-  app.use('/login', loginRouter);
-  app.get('/', (_req: Request, res: Response) => {
-    res.json({ message: 'Hello from Express + TypeScript!' });
+
+  app.get("/", (_req: Request, res: Response) => {
+    res.json({ message: "Hello from Express + TypeScript!" });
   });
+
+  app.use("/api", routes);
 
   //Make Sure this Handler is added at end.
   app.use(HttpExecptions.ExceptionHandler());
-  app.listen(PORT, () => {
-    console.log(`🚀 Server is running at http://localhost:${PORT}`);
+  app.listen(config.port, () => {
+    console.log(`🚀 Server is running at http://localhost:${config.port}`);
   });
 }
 
