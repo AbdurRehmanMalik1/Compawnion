@@ -32,7 +32,7 @@ const NavDropDown = ({ items, isOpen }: { items: Array<string>, isOpen: boolean 
             {
                 items.map(item => (
                     <NavLink key={item} to={item.toLowerCase()}
-                        className={({ isActive }: { isActive: boolean }) => `border-white px-2 py-1 ${isActive ? 'border-b font-bold' : ''}`}>
+                        className={({ isActive }: { isActive: boolean }) => `border-white px-2 py-1 ${isActive ? 'border-b font-bold' : ''} hover:opacity-70`}>
                         {item}
                     </NavLink>
                 ))

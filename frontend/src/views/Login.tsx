@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router";
-import { apiUrl } from "../apiconfig";
+import { apiServer } from "../apiconfig";
 import { getAxiosErrorData } from "../utility";
 
 interface LoginForm {
@@ -14,6 +14,7 @@ const Login = () => {
         email: '',
         password: ''
     });
+    const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
     const inputRow: string = "flex relative items-center border-b pb-2 border-gray-200 focus-within:border-black";
     const inputClass: string = "w-md px-4 py-2 outline-none flex-grow";
@@ -30,15 +31,18 @@ const Login = () => {
     const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const { email, password } = formData;
-        axios.post(`${apiUrl}/login`, { email, password })
+        setLoading(true);
+        apiServer.post('/login', { email, password })
             .then(res => {
+                setLoading(false);
                 navigate('/dashboard');
             }).catch(err => {
+                setLoading(false);
                 const data = getAxiosErrorData(err);
                 if (data.error)
                     setError(data.error?.message);
                 else
-                    setError('Unknown Error');
+                    setError('Unknown Error: Please Try Later');
             })
     }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,8 +99,8 @@ const Login = () => {
                     </div>
                 }
                 <div className="flex flex-row justify-center items-center">
-                    <button type="submit"
-                        className="bg-[var(--color-primary)] text-white cursor-pointer rounded-[40px] font-medium px-6 py-2 sm:px-10 sm:py-3">Log in
+                    <button disabled={loading} type="submit"
+                        className={`bg-[var(--color-primary)] text-white ${!loading ? 'cursor-pointer' : ''} rounded-[40px] font-medium px-6 py-2 sm:px-10 sm:py-3 ${loading ? `opacity-80` : ''}`}>Login
                     </button>
                 </div>
             </form>

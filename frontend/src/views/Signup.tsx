@@ -10,6 +10,7 @@ interface SignupForm {
 }
 const Signup = () => {
     const [error, setError] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
     const navigate = useNavigate();
     const [formData, setFormData] = useState<SignupForm>({
         name: '',
@@ -31,12 +32,15 @@ const Signup = () => {
     const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const { name, email, password } = formData;
+        setLoading(true);
         apiServer.post('/signup', { name, email, password })
             .then((_res) => {
                 //const data = res.data;
-                setError('')
+                setError('');
+                setLoading(false);
                 navigate('verifyCode', { state: { name, email, password } });
             }).catch(err => {
+                setLoading(false);
                 const data = getAxiosErrorData(err);
                 if (data.error)
                     setError(data.error?.message);
@@ -94,8 +98,8 @@ const Signup = () => {
                     </div>
                 }
                 <div className="flex flex-row justify-center items-center mt-0">
-                    <button type="submit"
-                        className="bg-[var(--color-primary)] text-white cursor-pointer rounded-[40px] font-medium px-6 py-2 sm:px-10 sm:py-3">Sign Up
+                    <button disabled={loading} type="submit"
+                        className={`bg-[var(--color-primary)] text-white ${!loading?'cursor-pointer' :''} rounded-[40px] font-medium px-6 py-2 sm:px-10 sm:py-3 ${loading?`opacity-80`:''}`}>Sign Up
                     </button>
                 </div>
             </form>

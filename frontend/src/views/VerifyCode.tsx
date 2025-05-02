@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
+import { apiServer } from "../apiconfig";
+import { getAxiosErrorData } from "../utility";
 
 const testUser = {
     name: 'bro',
@@ -10,6 +12,8 @@ const testUser = {
 const VerifyCode = () => {
     const navigate = useNavigate();
     const [code, setCode] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>('');
     const location = useLocation() || null;
     // useEffect(() => {
     //     if (!location?.state) navigate('/error404');
@@ -22,6 +26,19 @@ const VerifyCode = () => {
 
     const submitVerifyCode = (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true);
+        apiServer.post('verifyCode', { code })
+            .then(res => {
+                setLoading(false);
+                setError('');
+            }).catch(err => {
+                setLoading(false);
+                const data = getAxiosErrorData(err);
+                if (data.error)
+                    setError(data.error?.message);
+                else
+                    setError('Unknown Error');
+            })
         console.log(code);
     }
 
@@ -38,7 +55,7 @@ const VerifyCode = () => {
                 <p className="mb-10">Email was sent to <span className="text-[var(--color-secondary)] underline">{email}</span></p>
                 <form onSubmit={submitVerifyCode} className="flex flex-row gap-x-3">
                     <input value={code} onChange={e => setCode(e.target.value)} type="number" className={`${removeUpDownArrow} px-2 py-2 outline-none border-1 rounded-md`} name="code" placeholder="Enter Verification Code" />
-                    <button onClick={()=>{}} type="button" className="hover:opacity-80 border-none cursor-pointer rounded-lg align-center px-4 py-1 bg-[var(--color-secondary)]">Verify</button>
+                    <button type="submit" disabled={loading} onClick={() => { }} className={`hover:opacity-80 border-none cursor-pointer rounded-lg align-center px-4 py-1 bg-[var(--color-secondary)] ${loading ? 'opacity-80' : ''}`}>Verify</button>
                 </form>
                 <a className="text-[var(--color-secondary)] border-b-1 cursor-pointer hover:opacity-90">Resend Email</a>
             </div>
