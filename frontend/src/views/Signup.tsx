@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router";
 import { apiServer } from "../apiconfig";
 import { getAxiosErrorData } from "../utility";
+import { useAppSelector } from "../redux/hooks";
 
 interface SignupForm {
     name: string,
@@ -9,14 +10,7 @@ interface SignupForm {
     password: string
 }
 const Signup = () => {
-    const [error, setError] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(false);
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState<SignupForm>({
-        name: '',
-        email: '',
-        password: '',
-    });
+
     const inputRow: string = "flex relative items-center border-b pb-2 border-gray-200 focus-within:border-black";
     const inputClass: string = "w-md px-4 py-2 outline-none flex-grow bg-white  ";
     const LinkStyle: string = "no-underline text-inherit";
@@ -29,7 +23,14 @@ const Signup = () => {
     const CenterRightPageButton: string = `${LinkStyle} w-20 bg-[var(--color-primary)] rounded-br-xl rounded-tr-xl px-5 py-3 ${lowerOpacityHover}`;
     const CenterRightActivePageButton: string = `${LinkStyle} w-20 bg-[var(--color-secondary)] rounded-br-xl rounded-tr-xl px-5 py-3 ${lowerOpacityHover}`;
 
-
+    const [error, setError] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState<SignupForm>({
+        name: '',
+        email: '',
+        password: '',
+    });
     const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const { name, email, password } = formData;
@@ -100,7 +101,7 @@ const Signup = () => {
                 }
                 <div className="flex flex-row justify-center items-center mt-0">
                     <button disabled={loading} type="submit"
-                        className={`bg-[var(--color-primary)] text-white ${!loading?'cursor-pointer' :''} rounded-[40px] font-medium px-6 py-2 sm:px-10 sm:py-3 ${loading?`opacity-80`:''}`}>Sign Up
+                        className={`bg-[var(--color-primary)] text-white ${!loading ? 'cursor-pointer' : ''} rounded-[40px] font-medium px-6 py-2 sm:px-10 sm:py-3 ${loading ? `opacity-80` : ''}`}>Sign Up
                     </button>
                 </div>
             </form>

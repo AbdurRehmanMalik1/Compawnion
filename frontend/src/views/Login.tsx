@@ -1,20 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router";
 import { apiServer } from "../apiconfig";
 import { getAxiosErrorData } from "../utility";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { loginUser } from "../redux/slices/authSlice";
 
 interface LoginForm {
     email: string,
     password: string
 }
 const Login = () => {
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState<LoginForm>({
-        email: '',
-        password: ''
-    });
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string>('');
     const inputRow: string = "flex relative items-center border-b pb-2 border-gray-200 focus-within:border-black";
     const inputClass: string = "w-md px-4 py-2 outline-none flex-grow";
     const LinkStyle: string = "no-underline text-inherit";
@@ -28,23 +23,23 @@ const Login = () => {
     const CenterRightActivePageButton: string = `${LinkStyle} w-20 bg-[var(--color-secondary)] rounded-br-xl rounded-tr-xl px-5 py-3 ${lowerOpacityHover}`;
 
 
+
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState<LoginForm>({
+        email: '',
+        password: ''
+    });
+    const dispatch = useAppDispatch();
+    const { loading, error, isAuthenticated } = useAppSelector(state => state.auth);
     const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const { email, password } = formData;
-        setLoading(true);
-        apiServer.post('/login', { email, password })
-            .then(res => {
-                setLoading(false);
-                navigate('/dashboard');
-            }).catch(err => {
-                setLoading(false);
-                const data = getAxiosErrorData(err);
-                if (data.error)
-                    setError(data.error?.message);
-                else
-                    setError('Unknown Error: Please Try Later');
-            })
+        dispatch(loginUser({ email, password }))
     }
+    useEffect(() => {
+        navigate('/adopt')
+    }, [isAuthenticated, navigate])
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 

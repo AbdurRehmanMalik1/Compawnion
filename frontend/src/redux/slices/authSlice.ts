@@ -24,14 +24,10 @@ export const loginUser = createAsyncThunk(
             const response = await apiServer.post('/login', credentials);
             return response.data;
         } catch (error: any) {
-            // Handle axios error properly
             const data = getAxiosErrorData(error);
             return thunkAPI.rejectWithValue(
                 data?.error?.message || 'Login failed'
             );
-            // return thunkAPI.rejectWithValue(
-            //     error.response?.data?.message || 'Login failed'
-            // );
         }
     }
 );
@@ -40,14 +36,13 @@ const authSlice = createSlice({
     name: 'user',
     initialState: initialState,
     reducers: {
-        logout(state, action: PayloadAction<string>) {
+        logout(state) {
             state.isAuthenticated = false;
             state.email = '';
             state.name = '';
             state.error = '';
             state.loading = false;
         }
-
     },
     extraReducers: (builder) => {
         builder.
@@ -67,6 +62,7 @@ const authSlice = createSlice({
                 state.isAuthenticated = false;
                 state.error = typeof action.payload === 'string' ? action.payload : 'Login failed';
             })
+
     }
 })
 
