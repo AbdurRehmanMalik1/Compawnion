@@ -1,7 +1,6 @@
-import axios from "axios";
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router";
-import { apiUrl } from "../apiconfig";
+import { apiServer } from "../apiconfig";
 import { getAxiosErrorData } from "../utility";
 
 interface SignupForm {
@@ -32,13 +31,13 @@ const Signup = () => {
     const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const { name, email, password } = formData;
-        axios.post(`${apiUrl}/signup`, { name, email, password })
+        apiServer.post('/signup', { name, email, password })
             .then((_res) => {
                 //const data = res.data;
                 setError('')
                 navigate('verifyCode', { state: { name, email, password } });
             }).catch(err => {
-                const data  = getAxiosErrorData(err);
+                const data = getAxiosErrorData(err);
                 if (data.error)
                     setError(data.error?.message);
                 else
@@ -88,9 +87,9 @@ const Signup = () => {
                     <input name="password" onChange={handleChange} className={inputClass} type="password" placeholder="Password" />
                 </div>
                 {
-                    error && 
+                    error &&
                     <div className="flex flex-row items-center justify-center text-[var(--color-error-red)] mt-[-10px] mb-[-10px]">
-                        <img width={30} className="inputIcon" src="error_warning_icon.jpg"/>
+                        <img width={30} className="inputIcon" src="error_warning_icon.jpg" />
                         <label>{error}</label>
                     </div>
                 }
