@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { apiServer } from "../apiconfig";
 import { getAxiosErrorData } from "../utility";
+import clsx from "clsx";
+import Spinner from "../components/Spinner";
 
 const testUser = {
     name: 'bro',
@@ -31,13 +33,14 @@ const VerifyCode = () => {
             .then(res => {
                 setLoading(false);
                 setError('');
+                navigate('/dashboard');
             }).catch(err => {
                 setLoading(false);
                 const data = getAxiosErrorData(err);
                 if (data.error)
                     setError(data.error?.message);
                 else
-                    setError('Unknown Error');
+                    setError('Could not verify the code');
             })
         console.log(code);
     }
@@ -55,9 +58,23 @@ const VerifyCode = () => {
                 <p className="mb-10">Email was sent to <span className="text-[var(--color-secondary)] underline">{email}</span></p>
                 <form onSubmit={submitVerifyCode} className="flex flex-row gap-x-3">
                     <input value={code} onChange={e => setCode(e.target.value)} type="number" className={`${removeUpDownArrow} px-2 py-2 outline-none border-1 rounded-md`} name="code" placeholder="Enter Verification Code" />
-                    <button type="submit" disabled={loading} onClick={() => { }} className={`hover:opacity-80 border-none cursor-pointer rounded-lg align-center px-4 py-1 bg-[var(--color-secondary)] ${loading ? 'opacity-80' : ''}`}>Verify</button>
+                    <button type="submit" disabled={loading} className={clsx('hover:opacity-80 border-none rounded-lg align-center px-4 py-1 bg-[var(--color-secondary)]', loading ? 'opacity-80 cursor-normal' : 'cursor-pointer')}>Verify</button>
                 </form>
+                {
+                    error &&
+                    <div className="flex flex-row items-center justify-center text-[var(--color-error-red)] ">
+                        <label>{error}</label>
+                    </div>
+                }
                 <a className="text-[var(--color-secondary)] border-b-1 cursor-pointer hover:opacity-90">Resend Email</a>
+                <div className="h-[8px]">
+                    {
+
+                        loading &&
+                        <Spinner size={24}/>
+                    }
+                </div>
+
             </div>
         </div>
     )

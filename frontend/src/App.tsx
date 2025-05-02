@@ -5,16 +5,21 @@ import Signup from './views/Signup'
 import Navbar from './components/Navbar'
 import Home from './views/Home'
 import VerifyCode from './views/VerifyCode'
+import Dashboard from './views/Dashboard'
+import Adopt from './views/Adopt'
+import DashboardNavbar from './components/DashboardNavbar'
+import { useAppSelector } from './redux/hooks'
 
 const AppLayout = () => {
   return (
     <>
-      <Navbar />
+      <DashboardNavbar />
       <Outlet />
     </>
   )
 }
 const App = () => {
+  const name = useAppSelector(state=>state.auth.name)
   return (
     <>
       <Router>
@@ -26,6 +31,7 @@ const App = () => {
               <Route path='verifyCode' element={<VerifyCode/>}/>
             </Route>
             <Route path='/login' element={<Login />} />
+            <Route path='/adopt' element={<Adopt/>}></Route>
           </Route>
           <Route path='error404' element={<div>Error 404 Page Not Found</div>}/>
           <Route path='*' element={<div>Error 404 Page Not Found</div>}/>

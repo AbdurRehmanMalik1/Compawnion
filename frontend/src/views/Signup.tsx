@@ -20,13 +20,14 @@ const Signup = () => {
     const inputRow: string = "flex relative items-center border-b pb-2 border-gray-200 focus-within:border-black";
     const inputClass: string = "w-md px-4 py-2 outline-none flex-grow bg-white  ";
     const LinkStyle: string = "no-underline text-inherit";
-    const PageButton: string = `${LinkStyle} text-end bg-[var(--color-primary)] rounded-bl-xl rounded-tl-xl px-3 py-1`;
-    const ActivePageButton: string = `${LinkStyle} text-end bg-[var(--color-secondary)] rounded-bl-xl rounded-tl-xl px-3 py-1`;
+    const lowerOpacityHover = 'hover:opacity-80';
+    const PageButton: string = `${LinkStyle} text-end bg-[var(--color-primary)] rounded-bl-xl rounded-tl-xl px-3 py-1 ${lowerOpacityHover}`;
+    const ActivePageButton: string = `${LinkStyle} text-end bg-[var(--color-secondary)] rounded-bl-xl rounded-tl-xl px-3 py-1 ${lowerOpacityHover}`;
     const inputIcon: string = "w-4 sm:w-6";
-    const CenterLeftPageButton: string = `${LinkStyle} w-20 bg-[var(--color-primary)] rounded-bl-xl rounded-tl-xl px-5 py-3`;
-    const CenterLeftActivePageButton: string = `${LinkStyle} w-20  bg-[var(--color-secondary)] rounded-bl-xl rounded-tl-xl px-5 py-3`;
-    const CenterRightPageButton: string = `${LinkStyle} w-20 bg-[var(--color-primary)] rounded-br-xl rounded-tr-xl px-5 py-3`;
-    const CenterRightActivePageButton: string = `${LinkStyle} w-20 bg-[var(--color-secondary)] rounded-br-xl rounded-tr-xl px-5 py-3`;
+    const CenterLeftPageButton: string = `${LinkStyle} w-20 bg-[var(--color-primary)] rounded-bl-xl rounded-tl-xl px-5 py-3 ${lowerOpacityHover}`;
+    const CenterLeftActivePageButton: string = `${LinkStyle} w-20  bg-[var(--color-secondary)] rounded-bl-xl rounded-tl-xl px-5 py-3 ${lowerOpacityHover}`;
+    const CenterRightPageButton: string = `${LinkStyle} w-20 bg-[var(--color-primary)] rounded-br-xl rounded-tr-xl px-5 py-3 ${lowerOpacityHover}`;
+    const CenterRightActivePageButton: string = `${LinkStyle} w-20 bg-[var(--color-secondary)] rounded-br-xl rounded-tr-xl px-5 py-3 ${lowerOpacityHover}`;
 
 
     const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
@@ -93,7 +94,7 @@ const Signup = () => {
                 {
                     error &&
                     <div className="flex flex-row items-center justify-center text-[var(--color-error-red)] mt-[-10px] mb-[-10px]">
-                        <img width={30} className="inputIcon" src="error_warning_icon.jpg" />
+                        <img width={30} className="inputIcon" src="/error_warning_icon.jpg" />
                         <label>{error}</label>
                     </div>
                 }

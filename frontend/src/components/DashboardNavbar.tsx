@@ -1,10 +1,8 @@
 import { NavLink } from "react-router";
-import '../style/Navbar.css';
 import { useState } from "react";
 import React from "react";
 import NavDropDown from "./NavDropDown";
-
-const navItems = [
+const navItemsLoggedIn = [
     {
         name: 'Home',
         path: '/',
@@ -24,15 +22,16 @@ const navItems = [
         name: 'Account',
         path: '#',
         clickable: false,
-        items: ['Login', 'Signup'],
+        items: ['Profile', 'Logout'],
     }
 ];
 
-const ClickableLinkClass = ({ isActive, isDropdownOpen,clickable }: { isActive: boolean, isDropdownOpen: boolean,clickable:boolean}) => {
+const ClickableLinkClass = ({ isActive, isDropdownOpen, clickable }: { isActive: boolean, isDropdownOpen: boolean, clickable: boolean }) => {
     return `${isActive || (isDropdownOpen && clickable === false) ? 'bg-[var(--color-primary-dark)]' : ''} border-box px-6 group-hover:bg-[var(--color-primary-dark)] h-[100%] py-[2vh]`;
 };
 
-const Navbar = () => {
+
+const NavbarLoggedIn = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState<string | null>(null);
 
     const handleDropdownToggle = (name: string) => {
@@ -43,7 +42,7 @@ const Navbar = () => {
         <nav>
             <ul className="bg-[var(--color-primary)] text-white flex flex-row h-[8vh] justify-around items-center">
                 {
-                    navItems.map(({ name, items, clickable, path }, index) => (
+                    navItemsLoggedIn.map(({ name, items, clickable, path }, index) => (
                         <li
                             key={index}
                             className="group relative flex flex-col"
@@ -54,7 +53,7 @@ const Navbar = () => {
                             <NavLink
                                 onClick={(e) => !clickable && e.preventDefault()} // Prevent navigation for non-clickable links
                                 to={path}
-                                className={()=>ClickableLinkClass({ isActive:false, isDropdownOpen: isDropdownOpen === name, clickable })}
+                                className={() => ClickableLinkClass({ isActive: false, isDropdownOpen: isDropdownOpen === name, clickable })}
                             >
                                 {name}
                             </NavLink>
@@ -73,4 +72,4 @@ const Navbar = () => {
     );
 }
 
-export default React.memo(Navbar);;
+export default React.memo(NavbarLoggedIn);
