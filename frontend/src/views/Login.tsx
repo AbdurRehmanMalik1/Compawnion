@@ -37,7 +37,8 @@ const Login = () => {
         dispatch(loginUser({ email, password }))
     }
     useEffect(() => {
-        navigate('/adopt')
+        if(isAuthenticated)
+            navigate('/adopt')
     }, [isAuthenticated, navigate])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

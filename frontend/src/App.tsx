@@ -9,17 +9,17 @@ import Dashboard from './views/Dashboard'
 import Adopt from './views/Adopt'
 import DashboardNavbar from './components/DashboardNavbar'
 import { useAppSelector } from './redux/hooks'
+import PrivateRoute from './components/PrivateRoute'
 
 const AppLayout = () => {
   return (
     <>
-      <DashboardNavbar />
+      <Navbar />
       <Outlet />
     </>
   )
 }
 const App = () => {
-  const name = useAppSelector(state=>state.auth.name)
   return (
     <>
       <Router>
@@ -27,14 +27,14 @@ const App = () => {
           <Route path='/' element={<AppLayout />}>
             <Route index element={<Home />} />
             <Route path='/signup' element={<Outlet />} >
-              <Route index element={<Signup/>}/>
-              <Route path='verifyCode' element={<VerifyCode/>}/>
+              <Route index element={<Signup />} />
+              <Route path='verifyCode' element={<VerifyCode />} />
             </Route>
             <Route path='/login' element={<Login />} />
-            <Route path='/adopt' element={<Adopt/>}></Route>
+            <Route path='/adopt' element={<PrivateRoute><Adopt /></PrivateRoute>}></Route>
           </Route>
-          <Route path='error404' element={<div>Error 404 Page Not Found</div>}/>
-          <Route path='*' element={<div>Error 404 Page Not Found</div>}/>
+          <Route path='error404' element={<div>Error 404 Page Not Found</div>} />
+          <Route path='*' element={<div>Error 404 Page Not Found</div>} />
         </Routes>
       </Router>
     </>
