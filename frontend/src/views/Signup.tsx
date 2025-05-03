@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router";
 import { apiServer } from "../apiconfig";
 import { getAxiosErrorData } from "../utility";
-import { useAppSelector } from "../redux/hooks";
 
 interface SignupForm {
     name: string,

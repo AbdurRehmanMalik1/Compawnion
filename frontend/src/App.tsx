@@ -1,20 +1,21 @@
-import { Route, Routes, BrowserRouter as Router, Outlet } from 'react-router'
-import './App.css'
+import { Route, Routes, BrowserRouter as Router, Outlet } from 'react-router';
+import './App.css';
 import Login from './views/Login'
 import Signup from './views/Signup'
 import Navbar from './components/Navbar'
 import Home from './views/Home'
 import VerifyCode from './views/VerifyCode'
-import Dashboard from './views/Dashboard'
 import Adopt from './views/Adopt'
-import DashboardNavbar from './components/DashboardNavbar'
-import { useAppSelector } from './redux/hooks'
 import PrivateRoute from './components/PrivateRoute'
+import { useAppSelector } from './redux/hooks'
+
 
 const AppLayout = () => {
+  let  isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
+  isAuthenticated = false;
   return (
-    <div className='grid [grid-template-rows:8vh_1fr]'>
-      <Navbar />
+    <div className='flex flex-col'>
+      {isAuthenticated ? null : <Navbar />}
       <Outlet />
     </div>
   )

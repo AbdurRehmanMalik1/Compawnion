@@ -30,7 +30,7 @@ const VerifyCode = () => {
         e.preventDefault();
         setLoading(true);
         apiServer.post('verifyCode', { code })
-            .then(res => {
+            .then(_res => {
                 setLoading(false);
                 setError('');
                 navigate('/dashboard');
