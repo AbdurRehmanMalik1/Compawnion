@@ -56,7 +56,7 @@ const Login = () => {
     const toggleCenterRightPageButtonClass = ({ isActive }: { isActive: boolean }) =>
         isActive ? CenterRightActivePageButton : CenterRightPageButton;
     return (
-        <div className="flex justify-center md:grid md:grid-cols-[1fr_600px]">
+        <div className="flex justify-center md:grid md:grid-cols-[1fr_600px] h-[80vh]">
             <div className="bg-black hidden md:flex md:flex-row relative">
                 <img src="/login-cat-background.jpeg" className="object-cover w-full h-[92vh]" />
                 <div className="absolute top-[15%] right-0 text-white hidden sm:flex flex-col items-end gap-y-2 items-stretch">

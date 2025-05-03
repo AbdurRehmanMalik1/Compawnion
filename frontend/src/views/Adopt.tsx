@@ -27,9 +27,11 @@ const AdoptCategory = ({ category, options }: { category: any, options: string[]
             <h1 className="font-normal text-2xl px-2 pb-2">{category}</h1>
             {
                 options.map(option => {
-                    return <label className={
-                        clsx("text-[rgba(0,0,0,0.8)] cursor-pointer rounded-md border-box py-2 px-2", "hover:bg-gray-300")}>{option}
-                    </label>
+                    return (
+                        <label className={
+                            clsx("text-[rgba(0,0,0,0.8)] cursor-pointer rounded-md border-box py-2 px-2", "hover:bg-gray-300")}>{option}
+                        </label>
+                    )
                 })
             }
         </div>
@@ -63,24 +65,29 @@ const Adopt = () => {
                     </button>
                 </form>
             </div>
-            <div className={clsx("bg-gray-100  flex flex-col", "md:flex-row")}>
-                <div className="pl-2 flex flex-col min-w-80">
-                    <h1 className="font-bold pl-2 text-3xl">Search Filters</h1>
-                    {
-                        Object.entries(filterCategories).map(([category, options]) =>
-                            <AdoptCategory category={category} options={options} />
-                        )
-                    }
+            <div className={clsx("bg-gray-100 flex flex-col")}>
+                <div className="mb-4 mt-2">
+                    <h1 className="font-bold pl-4 text-3xl">Search Filters</h1>
                 </div>
-                <div className="flex flex-row justify-center gap-x-5 gap-y-4  py-8 flex-wrap">
-                    {
-                        pets.map(({ name, description, imageUrl }, index) => {
-                            return (
-                                <PetCard key={index} name={name} description={description} imageUrl={imageUrl} />
+                <div className={clsx("flex flex-col", "md:flex-row")}>
+                    <div className="flex pl-2 flex-col min-w-70">
+                        {
+                            Object.entries(filterCategories).map(([category, options]) =>
+                                <AdoptCategory category={category} options={options} />
                             )
-                        })
-                    }
+                        }
+                    </div>
+                    <div className="flex flex-row justify-center gap-x-5 gap-y-4 flex-wrap">
+                        {
+                            pets.map(({ name, description, imageUrl }, index) => {
+                                return (
+                                    <PetCard key={index} name={name} description={description} imageUrl={imageUrl} />
+                                )
+                            })
+                        }
+                    </div>
                 </div>
+
             </div>
 
 

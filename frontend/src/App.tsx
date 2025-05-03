@@ -13,10 +13,10 @@ import PrivateRoute from './components/PrivateRoute'
 
 const AppLayout = () => {
   return (
-    <>
+    <div className='grid [grid-template-rows:8vh_1fr]'>
       <Navbar />
       <Outlet />
-    </>
+    </div>
   )
 }
 const App = () => {
