@@ -65,7 +65,7 @@ const Signup = () => {
         isActive ? CenterRightActivePageButton : CenterRightPageButton;
 
     return (
-        <div className="flex justify-center md:grid md:grid-cols-[1fr_600px] h-[80vh]">
+        <div className="flex justify-center md:grid md:grid-cols-[1fr_600px]">
             <div className="bg-black hidden md:flex md:flex-row relative">
                 <img src="/login-cat-background.jpeg" className="object-cover w-full h-[92vh]" />
                 <div className="absolute top-[15%] right-0 text-white hidden sm:flex flex-col items-end gap-y-2 items-stretch">
@@ -73,8 +73,8 @@ const Signup = () => {
                     <NavLink to={'/signup'} className={togglePageButtonClass}>Signup</NavLink>
                 </div>
             </div>
-            <form onSubmit={submitForm} className="relative box-border sm:px-0 w-[80%] sm:w-[60%] flex flex-col gap-y-8 md:gap-y-10 m-auto mt-5 text-sm sm:text-2sm ">
-                <h1 className="text-3xl md:text-4xl text-center font-medium mt-10 mb-8">Compawnion</h1>
+            <form onSubmit={submitForm} className="relative box-border sm:px-0 w-[80%] sm:w-[60%] flex flex-col gap-y-6 md:gap-y-10 m-auto mt-5 text-sm sm:text-2sm ">
+                <h1 className="text-3xl md:text-4xl text-center font-medium mt-14 mb-4">Compawnion</h1>
                 <div className="text-white flex flex-row md:hidden justify-center">
                     <NavLink to={'/login'} className={toggleCenterLeftPageButtonClass}>Login</NavLink>
                     <NavLink to={'/signup'} className={toggleCenterRightPageButtonClass}>Signup</NavLink>

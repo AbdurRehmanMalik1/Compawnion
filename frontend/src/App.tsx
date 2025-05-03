@@ -14,7 +14,7 @@ const AppLayout = () => {
   let  isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
   isAuthenticated = false;
   return (
-    <div className='flex flex-col'>
+    <div className="flex flex-col h-full flex-grow">
       {isAuthenticated ? null : <Navbar />}
       <Outlet />
     </div>

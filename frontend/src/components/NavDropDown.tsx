@@ -1,8 +1,16 @@
+import clsx from "clsx";
+import React from "react";
 import { NavLink } from "react-router";
 
 const NavDropDown = ({ items, isOpen }: { items: Array<string>, isOpen: boolean }) => {
     return (
-        <ul className={`w-full text-center absolute ${isOpen ? 'flex' : 'hidden'} rounded-b-xl top-full px-2 pb-2 left-0 bg-[var(--color-primary-dark)] flex-col text-white z-10`}>
+        <ul
+            className={clsx(
+                'w-full text-center rounded-b-xl top-full pb-2 left-0 bg-[var(--color-primary-dark)] flex-col text-white z-10',
+                isOpen ? 'flex' : 'hidden',
+                "static sm:absolute pl-10 sm:px-2 "
+            )}
+        >
             {
                 items.map(item => (
                     <NavLink key={item} to={item.toLowerCase()}
@@ -16,4 +24,4 @@ const NavDropDown = ({ items, isOpen }: { items: Array<string>, isOpen: boolean 
 }
 
 
-export default NavDropDown;
+export default React.memo(NavDropDown);

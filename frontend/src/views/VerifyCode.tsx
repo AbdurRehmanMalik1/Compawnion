@@ -47,12 +47,13 @@ const VerifyCode = () => {
 
     return (
         name &&
+
         <div style={{
             backgroundImage: `url('${backgroundUrl}')`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundPosition: "center",
             backgroundRepeat: 'no-repeat'
-        }} className="flex flex-row justify-center h-[92vh] items-center">
+        }} className="flex flex-row justify-center items-center flex-grow h-[92vh]">
             <div className="bg-black/70 text-white flex flex-col items-center px-8 py-8 shadow-sm gap-y-5 rounded-lg">
                 <h2 className="text-[var(--color-primary)] text-center text-2xl font-bold">Code Verification</h2>
                 <p className="mb-10">Email was sent to <span className="text-[var(--color-secondary)] underline">{email}</span></p>
@@ -71,12 +72,13 @@ const VerifyCode = () => {
                     {
 
                         loading &&
-                        <Spinner size={24}/>
+                        <Spinner size={24} />
                     }
                 </div>
 
             </div>
         </div>
+
     )
 }
 

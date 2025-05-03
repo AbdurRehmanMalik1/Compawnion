@@ -1,8 +1,10 @@
-import { NavLink } from "react-router";
 import '../style/Navbar.css';
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import React from "react";
-import NavDropDown from "./NavDropDown";
+import clsx from "clsx";
+import NavItem from "./NavItem";
+import SideNavItem from './SideNavItem';
+import TitleAndIcon from './TitleAndIcon';
 
 const navItems = [
     {
@@ -28,9 +30,6 @@ const navItems = [
     }
 ];
 
-const ClickableLinkClass = ({ isActive, isDropdownOpen, clickable }: { isActive: boolean, isDropdownOpen: boolean, clickable: boolean }) => {
-    return `${isActive || (isDropdownOpen && clickable === false) ? 'bg-[var(--color-primary-dark)]' : ''} border-box px-6 group-hover:bg-[var(--color-primary-dark)] h-[100%] py-[2vh]`;
-};
 
 const Navbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState<string | null>(null);
@@ -38,50 +37,74 @@ const Navbar = () => {
     const handleDropdownToggle = (name: string) => {
         setIsDropdownOpen(isDropdownOpen === name ? null : name); // Toggle the dropdown
     };
+    const [hamburger, toggleHamburger] = useState<boolean>(false);
+    const memoizedSetIsDropDownOpen = useCallback((val: string | null) => setIsDropdownOpen(val), [])
+    const memoizedHandleDropdownToggle = useCallback((name: string) => handleDropdownToggle(name), []);
 
-    const pawColor = "#1defa9"
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 640) {
+                toggleHamburger(false);
+            }
+        };
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
     return (
         <nav>
-            <ul className="bg-[var(--color-primary)] text-white flex flex-row justify-start items-center">
+            <ul className={clsx(
+                "bg-[var(--color-primary)] text-white flex  justify-between ",
+                "sm:justify-start",
+                "flex-row items-center"
+            )} >
                 <li className="flex flex-row items-center">
-                    <svg className="w-[64px] h-[45px]" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="20" cy="14" r="8" fill={pawColor} />
-                        <circle cx="44" cy="14" r="8" fill={pawColor} />
-                        <circle cx="10" cy="32" r="8" fill={pawColor} />
-                        <circle cx="54" cy="32" r="8" fill={pawColor} />
-                        <path d="M32 28c-8 0-18 10-18 18 0 4 4 8 10 8h16c6 0 10-4 10-8 0-8-10-18-18-18z" fill={pawColor}/>
-                    </svg>
-                    <label className="text-[var(--color-secondary-light)]">Compawnion</label>
+                    <TitleAndIcon />
                 </li>
-                <div className="pl-4 flex flex-row justify-around items-center flex-grow">
-                {
-                    navItems.map(({ name, items, clickable, path }, index) => (
-                        <li
-                            key={index}
-                            className="group relative flex flex-col"
-                            onMouseEnter={() => setIsDropdownOpen(name)} // Show on hover for desktop
-                            onMouseLeave={() => setIsDropdownOpen(null)} // Hide on hover out for desktop
-                            onClick={() => handleDropdownToggle(name)} // Toggle on click for mobile
-                        >
-                            <NavLink
-                                onClick={(e) => !clickable && e.preventDefault()} // Prevent navigation for non-clickable links
-                                to={path}
-                                className={() => ClickableLinkClass({ isActive: false, isDropdownOpen: isDropdownOpen === name, clickable })}
-                            >
-                                {name}
-                            </NavLink>
-
-                            {items && (
-                                <NavDropDown
-                                    items={items}
-                                    isOpen={isDropdownOpen === name}
-                                />
-                            )}
-                        </li>
-                    ))
-                }
-                </div>
-                
+                <li onClick={() => toggleHamburger(prev => !prev)} className={
+                    clsx("justify-end inline-block mr-5 text-2xl cursor-pointer pl-9 z-12",
+                        "sm:hidden",
+                        "hover:opacity-80"
+                    )}>
+                    &#9776;
+                </li>
+                {hamburger && (
+                    <div
+                        id="side-nav-items"
+                        className={clsx(
+                            "fixed top-0 left-0 h-full w-[60%] bg-[var(--color-primary-dark)] text-white shadow-lg transition-transform duration-300 z-10",
+                            "translate-x-0",
+                            "flex flex-col items-center"
+                        )}
+                    >
+                        <TitleAndIcon />
+                        {navItems.map(({ name, items, clickable, path }, index) => (
+                            <SideNavItem
+                                key={index}
+                                name={name}
+                                path={path}
+                                clickable={clickable}
+                                items={items}
+                            />
+                        ))}
+                    </div>
+                )}
+                {!hamburger && (
+                    <ul id="default-nav-items" className={clsx("hidden pl-4 flex-row justify-around items-center flex-grow", "sm:flex")}>
+                        {navItems.map(({ name, items, clickable, path }, index) => (
+                            <NavItem
+                                key={index}
+                                name={name}
+                                path={path}
+                                clickable={clickable}
+                                items={items}
+                                isDropdownOpen={isDropdownOpen === name}
+                                setIsDropdownOpen={memoizedSetIsDropDownOpen}
+                                handleDropdownToggle={memoizedHandleDropdownToggle}
+                            />
+                        ))}
+                    </ul>
+                )}
             </ul>
         </nav>
     );

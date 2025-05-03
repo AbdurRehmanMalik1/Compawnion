@@ -1,8 +1,17 @@
 @import "tailwindcss";
+/*
+#f0f4f8
+#0077B6
+#A42A04
+#A3D9A5
 
+
+#a26ef6 og
+##6a40ad og dark
+*/
 :root {
-  --color-primary: #a26ef6;
-  --color-primary-dark: #6a40ad;
+  --color-primary: #A42A04;
+  --color-primary-dark: #A42A04;
   /* Indigo 600 */
   --color-secondary: #10b981;
   --color-secondary-light: #1defa9;
