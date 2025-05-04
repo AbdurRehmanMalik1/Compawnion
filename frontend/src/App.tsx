@@ -8,6 +8,8 @@ import VerifyCode from './views/VerifyCode'
 import Adopt from './views/Adopt'
 import PrivateRoute from './components/PrivateRoute'
 import { useAppSelector } from './redux/hooks'
+import AboutUs from './views/About';
+import ContactUs from './views/Contact';
 
 
 const AppLayout = () => {
@@ -27,12 +29,14 @@ const App = () => {
         <Routes>
           <Route path='/' element={<AppLayout />}>
             <Route index element={<Home />} />
-            <Route path='/signup' element={<Outlet />} >
+            <Route path='about' element={<AboutUs/>}/>
+            <Route path='contact' element={<ContactUs/>}/>
+            <Route path='signup' element={<Outlet />} >
               <Route index element={<Signup />} />
               <Route path='verifyCode' element={<VerifyCode />} />
             </Route>
-            <Route path='/login' element={<Login />} />
-            <Route path='/adopt' element={<PrivateRoute><Adopt /></PrivateRoute>}></Route>
+            <Route path='login' element={<Login />} />
+            <Route path='adopt' element={<PrivateRoute><Adopt /></PrivateRoute>}></Route>
           </Route>
           <Route path='error404' element={<div>Error 404 Page Not Found</div>} />
           <Route path='*' element={<div>Error 404 Page Not Found</div>} />
