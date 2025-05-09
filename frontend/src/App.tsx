@@ -11,6 +11,7 @@ import { useAppSelector } from './redux/hooks';
 import About from './views/About'; 
 import Contact from './views/Contact'; 
 import Chat from './views/ChatPage'; 
+import Forum from './views/CommunityForum'; 
 
 
 const AppLayout = () => {
@@ -40,6 +41,7 @@ const App = () => {
             <Route path="/about" element={<About />} /> 
             <Route path="/contact" element={<Contact />} /> 
             <Route path="/chat" element={<Chat />} /> 
+            <Route path="/forum" element={<Forum />} /> 
           </Route>
           <Route path="error404" element={<div>Error 404 Page Not Found</div>} />
           <Route path="*" element={<div>Error 404 Page Not Found</div>} />
