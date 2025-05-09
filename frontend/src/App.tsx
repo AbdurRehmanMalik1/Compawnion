@@ -10,6 +10,7 @@ import PrivateRoute from './components/PrivateRoute';
 import { useAppSelector } from './redux/hooks';
 import About from './views/About'; 
 import Contact from './views/Contact'; 
+import Chat from './views/ChatPage'; 
 
 
 const AppLayout = () => {
@@ -38,6 +39,7 @@ const App = () => {
             <Route path="/adopt" element={<PrivateRoute><Adopt /></PrivateRoute>} />
             <Route path="/about" element={<About />} /> 
             <Route path="/contact" element={<Contact />} /> 
+            <Route path="/chat" element={<Chat />} /> 
           </Route>
           <Route path="error404" element={<div>Error 404 Page Not Found</div>} />
           <Route path="*" element={<div>Error 404 Page Not Found</div>} />
