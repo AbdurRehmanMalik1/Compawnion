@@ -18,7 +18,7 @@ const testPets: Array<Pet> = [
 const filterCategories = {
     Species: ["Cats", "Dogs", "Others"],
     Color: ["Gray", "Black", "White", "Orange"],
-    Gender: ["Male" , "Female" , "Others"] 
+    Gender: ["Male", "Female", "Others"]
 
 }
 
@@ -53,24 +53,24 @@ const Adopt = () => {
         <div className="mt-5 flex flex-col items-center justify-center gap-y-5">
             <div className="flex flex-col items-center gap-y-7 border-b-1 pb-8 w-[90%] ">
                 <h1 className="text-center bolder text-4xl">Adopt a friend Right Now!</h1>
-                
+
             </div>
             <div className={clsx("bg-gray-100 flex flex-col")}>
                 <div className="pl-4 flex flex-col items-start gap-y-4 mb-4">
                     <h1 className="font-bold xtext-3xl">Search Filters</h1>
                     <form onSubmit={handleSearchPet} className="flex items-center rounded-lg border-0 h-10">
-                    <input
-                        type="text"
-                        className="h-full flex-1  border-t border-b border-l rounded-tl-lg rounded-bl-lg px-2 py-1 outline-none"
-                        placeholder="Search Your Compawnion!"
-                    />
-                    <button
-                        type="submit"
-                        className="h-full border-t border-b rounded-tr-lg rounded-br-lg bg-[var(--color-secondary)] text-white px-3 py-1 cursor-pointer hover:bg-[var(--color-secondary-light)]"
-                    >
-                        Search
-                    </button>
-                </form>
+                        <input
+                            type="text"
+                            className="h-full flex-1  border-t border-b border-l rounded-tl-lg rounded-bl-lg px-2 py-1 outline-none"
+                            placeholder="Search Your Compawnion!"
+                        />
+                        <button
+                            type="submit"
+                            className="h-full border-t border-b rounded-tr-lg rounded-br-lg bg-[var(--color-secondary)] text-white px-3 py-1 cursor-pointer hover:bg-[var(--color-secondary-light)]"
+                        >
+                            Search
+                        </button>
+                    </form>
                 </div>
                 <div className={clsx("flex flex-col", "md:flex-row")}>
                     <div className="flex pl-2 flex-col min-w-70">

@@ -23,7 +23,7 @@ const Section = ({
                         <p className="text-lg text-white mb-4">{summary}</p>
                         <button
                             onClick={() => setExpanded(true)}
-                            className="text-[#c6fadc] font-semibold hover:underline transition"
+                            className="cursor-pointer text-[#c6fadc] font-semibold hover:underline transition"
                         >
                             Read More ▼
                         </button>
@@ -41,7 +41,7 @@ const Section = ({
                         <div className="text-lg space-y-4 mb-6">{content}</div>
                         <button
                             onClick={() => setExpanded(false)}
-                            className="text-[#b1553b] font-semibold hover:underline"
+                            className="cursor-pointer text-[#b1553b] font-semibold hover:underline"
                         >
                             Show Less ▲
                         </button>
@@ -56,7 +56,7 @@ const Section = ({
 
 const AboutUs = () => {
     return (
-        <div className="font-sans scroll-smooth bg-gradient-to-r from-[#b1553b] to-[#c6fadc] min-h-screen w-screen overflow-x-hidden text-[var(--color-primary-dark)] pb-20">
+        <div className="font-sans scroll-smooth bg-gradient-to-r from-[#b1553b] to-[#c6fadc] min-h-screen  overflow-x-hidden text-[var(--color-primary-dark)] pb-20">
             <h1 className="text-4xl font-bold text-center text-white py-10 transition duration-700 hover:text-yellow-100">
                 About Us
             </h1>

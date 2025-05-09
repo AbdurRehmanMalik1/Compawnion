@@ -64,7 +64,7 @@ const adoptSlice = createSlice({
                 state.loading = true;
                 state.error = '';
                 // state.results = [];
-            })
+            })  
             .addCase(searchPet.fulfilled, (state, action: PayloadAction<PetInterface[]>) => {
                 state.loading = false;
                 state.results = action.payload;
@@ -78,4 +78,4 @@ const adoptSlice = createSlice({
 
 
 export const { setSearch, setFilter } = adoptSlice.actions;
-export default  adoptSlice.reducer;
+export default adoptSlice.reducer;

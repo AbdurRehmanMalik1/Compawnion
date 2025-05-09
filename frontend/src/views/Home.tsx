@@ -40,7 +40,7 @@ const Home = () => {
                         Discover adoptable pets, book vet appointments, join a pet care community, and get AI-powered recommendations — all in one place.
                     </p>
                     <a href="/signup">
-                        <button className="bg-white text-[var(--color-primary-dark)] px-8 py-4 rounded-full font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition duration-300">
+                        <button className="cursor-pointer bg-white text-[var(--color-primary-dark)] px-8 py-4 rounded-full font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition duration-300">
                             Get Started
                         </button>
                     </a>
@@ -131,7 +131,7 @@ const Home = () => {
                     Sign in now to start browsing, booking, and bonding with your future furry friend.
                 </p>
                 <a href="/login">
-                    <button className="bg-white text-[var(--color-primary-dark)] px-10 py-4 rounded-full font-bold shadow-lg hover:scale-105 hover:shadow-xl transition duration-300">
+                    <button className="cursor-pointer bg-white text-[var(--color-primary-dark)] px-10 py-4 rounded-full font-bold shadow-lg hover:scale-105 hover:shadow-xl transition duration-300">
                         Sign In
                     </button>
                 </a>

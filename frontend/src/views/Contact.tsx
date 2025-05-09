@@ -25,7 +25,7 @@ const ContactUs = () => {
                         { name: 'Azwa Nawaz', email: 'azwa.nawaz@gmail.com' },
                         { name: 'Asad Ali', email: 'asad.ali@gmail.com' },
                     ].map(({ name, email }) => (
-                        <li key={email} className={clsx("flex items-center justify-between border-b pb-2","text-sm sm:text-xl")}>
+                        <li key={email} className={clsx("flex items-center justify-between border-b pb-2", "text-sm sm:text-xl")}>
                             <span className="">{name}</span>
                             <a href={`mailto:${email}`} className="text-blue-600 hover:underline">
                                 {email}
