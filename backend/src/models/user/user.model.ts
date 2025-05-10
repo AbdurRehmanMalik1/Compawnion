@@ -69,6 +69,11 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+userSchema.index(
+  { "roleData.location": "2dsphere" },
+  { partialFilterExpression: { role: "shelter" } }
+);
+
 userSchema.pre("save", async function (next) {
   if (!this.password || !this.isModified("password")) {
     next();
