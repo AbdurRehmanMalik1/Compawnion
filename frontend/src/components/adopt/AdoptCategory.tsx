@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React, { Key } from "react";
+import React from "react";
 import { FilterCategory, FilterFormData, FilterKey } from "../../views/Adopt";
 
 interface AdoptCategoryProps {
