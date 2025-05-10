@@ -21,4 +21,6 @@ router.get(
   petController.getShelterPets
 );
 
+router.get("/search", petController.searchPets);
+
 export default router;

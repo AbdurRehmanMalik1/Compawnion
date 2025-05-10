@@ -259,3 +259,117 @@
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
+
+/**
+ * @swagger
+ * /api/pets/search:
+ *   get:
+ *     tags:
+ *       - Pets
+ *     summary: Search for pets across all shelters
+ *     description: Search for pets with optional filters including location-based search and shelter name search
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search term to match against pet name, description, or shelter name (case-insensitive partial match)
+ *       - in: query
+ *         name: species
+ *         schema:
+ *           type: string
+ *           enum: [dog, cat, bird, rabbit, other]
+ *         description: Filter by pet species
+ *       - in: query
+ *         name: gender
+ *         schema:
+ *           type: string
+ *           enum: [male, female, unknown]
+ *         description: Filter by pet gender
+ *       - in: query
+ *         name: color
+ *         schema:
+ *           type: string
+ *         description: Filter by pet color (case-insensitive partial match)
+ *       - in: query
+ *         name: breed
+ *         schema:
+ *           type: string
+ *         description: Filter by pet breed (case-insensitive partial match)
+ *       - in: query
+ *         name: minAge
+ *         schema:
+ *           type: number
+ *         description: Minimum age for filtering
+ *       - in: query
+ *         name: maxAge
+ *         schema:
+ *           type: number
+ *         description: Maximum age for filtering
+ *       - in: query
+ *         name: ageUnit
+ *         schema:
+ *           type: string
+ *           enum: [days, months, years]
+ *         description: Unit for age range (days, months, years)
+ *       - in: query
+ *         name: adoptionStatus
+ *         schema:
+ *           type: string
+ *           enum: [available, pending, adopted]
+ *         description: Filter by adoption status
+ *       - in: query
+ *         name: minAdoptionFee
+ *         schema:
+ *           type: number
+ *         description: Minimum adoption fee for filtering
+ *       - in: query
+ *         name: maxAdoptionFee
+ *         schema:
+ *           type: number
+ *         description: Maximum adoption fee for filtering
+ *       - in: query
+ *         name: location
+ *         schema:
+ *           type: string
+ *           example: "-73.935242,40.730610"
+ *         description: Location coordinates (longitude,latitude) for radius search
+ *       - in: query
+ *         name: radius
+ *         schema:
+ *           type: number
+ *           example: 10
+ *         description: Search radius in kilometers
+ *     responses:
+ *       200:
+ *         description: List of pets retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Pets retrieved successfully
+ *                 pets:
+ *                   type: array
+ *                   items:
+ *                     allOf:
+ *                       - $ref: '#/components/schemas/Pet'
+ *                       - type: object
+ *                         properties:
+ *                           shelterId:
+ *                             type: object
+ *                             properties:
+ *                               _id:
+ *                                 type: string
+ *                               roleData:
+ *                                 type: object
+ *                                 properties:
+ *                                   shelterName:
+ *                                     type: string
+ *                                   address:
+ *                                     type: string
+ *                                   phone:
+ *                                     type: string
+ */
