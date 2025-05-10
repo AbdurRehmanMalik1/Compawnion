@@ -3,3 +3,7 @@ export enum UserRole {
   SHELTER = "shelter",
   VETERINARIAN = "veterinarian",
 }
+
+export interface JwtPayload {
+  userId: string;
+}

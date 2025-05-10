@@ -69,6 +69,8 @@
  *       - Authentication
  *     summary: Verify user email with OTP
  *     description: Verifies user's email using the OTP sent during signup
+ *     security:
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -76,13 +78,8 @@
  *           schema:
  *             type: object
  *             required:
- *               - email
  *               - otp
  *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *                 description: User's email address
  *               otp:
  *                 type: string
  *                 description: 6-digit OTP received via email
@@ -124,19 +121,8 @@
  *       - Authentication
  *     summary: Resend verification code
  *     description: Resends a new verification OTP to the user's email
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *                 description: User's email address
+ *     security:
+ *       - cookieAuth: []
  *     responses:
  *       200:
  *         description: Verification code resent successfully

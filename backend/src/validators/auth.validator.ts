@@ -48,7 +48,6 @@ const loginValidator = [
 ];
 
 const verifyOTPValidator = [
-  body("email").isEmail().withMessage("Valid email is required"),
   body("otp")
     .isLength({ min: 6, max: 6 })
     .withMessage("OTP must be 6 characters long")
@@ -57,20 +56,8 @@ const verifyOTPValidator = [
   validateRequest,
 ];
 
-const resendVerificationValidator = [
-  body("email")
-    .trim()
-    .notEmpty()
-    .withMessage("Email is required")
-    .isEmail()
-    .withMessage("Please provide a valid email")
-    .normalizeEmail(),
-  validateRequest,
-];
-
 export const authValidator = {
   signup: signupValidator,
   login: loginValidator,
   verifyOTP: verifyOTPValidator,
-  resendVerification: resendVerificationValidator,
 };

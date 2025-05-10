@@ -1,9 +1,13 @@
 import crypto from "crypto";
 import { Request, Response } from "express";
+import jwt, { SignOptions } from "jsonwebtoken";
 import OTPModel from "../models/otp.model";
 import UserModel, { UserModelI } from "../models/user/user.model";
 import HttpExceptions from "../utility/exceptions/HttpExceptions";
 import { sendOTPEmail } from "../utility/services/sendEmail";
+import { getCookieOptions } from "../utility/cookie.utils";
+import { config } from "../config";
+import { JwtPayload } from "../types";
 
 const signup = async (req: Request, res: Response) => {
   const { name, email, password, avatar } = req.body;
@@ -18,7 +22,7 @@ const signup = async (req: Request, res: Response) => {
   const otp = crypto.randomInt(100000, 999999).toString();
 
   // Create new user
-  const user = new UserModel({
+  const user = await UserModel.create({
     name,
     email,
     password,
@@ -26,15 +30,15 @@ const signup = async (req: Request, res: Response) => {
     isVerified: false,
   });
 
-  // Save user
-  await user.save();
-
   // Create and save OTP
   const otpDoc = new OTPModel({
     userId: user._id,
     otp,
   });
   await otpDoc.save();
+
+  // Generate JWT token
+  const token = user.createJWT();
 
   // Send OTP email
   await sendOTPEmail({
@@ -46,6 +50,9 @@ const signup = async (req: Request, res: Response) => {
   const userObj = user.toObject();
   const { password: _, ...userWithoutSensitive } = userObj;
 
+  // Set token in cookie
+  res.cookie("token", token, getCookieOptions());
+
   res.status(201).json({
     message:
       "Signup successful. Please check your email for verification code.",
@@ -54,13 +61,8 @@ const signup = async (req: Request, res: Response) => {
 };
 
 const verifyOTP = async (req: Request, res: Response) => {
-  const { email, otp } = req.body;
-
-  // Find user by email
-  const user = await UserModel.findOne({ email });
-  if (!user) {
-    throw HttpExceptions.NotFound("User not found");
-  }
+  const { otp } = req.body;
+  const user = req.user as UserModelI;
 
   // Find valid OTP for user
   const otpDoc = await OTPModel.findOne({
@@ -95,13 +97,7 @@ const verifyOTP = async (req: Request, res: Response) => {
 };
 
 const resendVerification = async (req: Request, res: Response) => {
-  const { email } = req.body;
-
-  // Find user by email
-  const user = await UserModel.findOne({ email });
-  if (!user) {
-    throw HttpExceptions.NotFound("User not found");
-  }
+  const user = req.user as UserModelI;
 
   if (user.isVerified) {
     throw HttpExceptions.BadRequest("User is already verified");
@@ -119,7 +115,7 @@ const resendVerification = async (req: Request, res: Response) => {
 
   // Send OTP email
   await sendOTPEmail({
-    email,
+    email: user.email,
     otpCode: otp,
   });
 

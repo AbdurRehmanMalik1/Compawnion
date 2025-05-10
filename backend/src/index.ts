@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { config } from "./config";
 import { connectDB } from "./mongo.connection";
 import HttpExecptions from "./utility/exceptions/HttpExceptions";
@@ -10,8 +11,15 @@ import { swaggerSpec } from "./docs/swagger.config";
 function main() {
   const app = express();
 
-  app.use(cors());
+  app.use(
+    cors({
+      origin: config.cors.origin,
+      credentials: true,
+    })
+  );
   app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+  app.use(cookieParser());
 
   // Swagger Documentation
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));

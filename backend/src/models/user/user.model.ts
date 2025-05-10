@@ -4,8 +4,11 @@ import { ShelterData, shelterDataSchema } from "./shelter.data";
 import { AdopterData, adopterDataSchema } from "./adopter.data";
 import { VetData, vetDataSchema } from "./vet.data";
 import bcrypt from "bcrypt";
+import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
+import { config } from "../../config";
 
 export interface UserModelI extends Document {
+  _id: string;
   name: string;
   email: string;
   password: string;
@@ -13,6 +16,7 @@ export interface UserModelI extends Document {
   roleData: ShelterData | AdopterData | VetData | Record<string, never>;
   avatar?: string;
   isVerified: boolean;
+  createJWT: () => string;
 }
 
 const userSchema = new mongoose.Schema({
@@ -61,8 +65,6 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-const UserModel = mongoose.model<UserModelI>("User", userSchema);
-
 userSchema.pre("save", async function (next) {
   if (!this.password || !this.isModified("password")) {
     next();
@@ -71,5 +73,13 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password as string, salt);
   next();
 });
+
+userSchema.methods.createJWT = function () {
+  const payload: JwtPayload = { userId: this._id.toString() };
+  const options: SignOptions = { expiresIn: "7d" };
+  return jwt.sign(payload, config.jwt.secret, options);
+};
+
+const UserModel = mongoose.model<UserModelI>("User", userSchema);
 
 export default UserModel;
