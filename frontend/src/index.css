@@ -25,6 +25,11 @@
   --color-text: #111827;
   /* Gray 900 */
   --color-error-red: #FF0000;
+
+  /*Primary: Sage Green #A3B18A*/
+  /*Secondary: Warm Beige #F5F3EA*/
+
+
 }
 
 input:-webkit-autofill {

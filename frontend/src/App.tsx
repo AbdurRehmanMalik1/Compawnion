@@ -10,6 +10,7 @@ import PrivateRoute from './components/PrivateRoute'
 import { useAppSelector } from './redux/hooks'
 import AboutUs from './views/About';
 import ContactUs from './views/Contact';
+import SignUpDetails from './views/SignUpDetails';
 
 
 const AppLayout = () => {
@@ -31,6 +32,7 @@ const App = () => {
             <Route index element={<Home />} />
             <Route path='about' element={<AboutUs/>}/>
             <Route path='contact' element={<ContactUs/>}/>
+            <Route path='signUpDetails' element={<SignUpDetails/>}/>
             <Route path='signup' element={<Outlet />} >
               <Route index element={<Signup />} />
               <Route path='verifyCode' element={<VerifyCode />} />
