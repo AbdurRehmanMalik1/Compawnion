@@ -10,12 +10,14 @@ import {
 const router = Router();
 
 router.post("/signup", authValidator.signup, authController.signup);
+
 router.post(
   "/verify",
   authMiddlewareForVerification,
   authValidator.verifyOTP,
   authController.verifyOTP
 );
+
 router.post(
   "/resend-verification",
   authMiddlewareForVerification,

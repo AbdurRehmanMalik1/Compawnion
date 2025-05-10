@@ -38,10 +38,10 @@ const signup = async (req: Request, res: Response) => {
   const token = user.createJWT();
 
   // Send OTP email
-  await sendOTPEmail({
-    email,
-    otpCode: otp,
-  });
+  // await sendOTPEmail({
+  //   email,
+  //   otpCode: otp,
+  // });
 
   // Remove sensitive data from response
   const userObj = user.toObject();
