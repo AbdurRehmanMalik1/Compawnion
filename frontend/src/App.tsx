@@ -12,6 +12,7 @@ import About from './views/About';
 import Contact from './views/Contact'; 
 import Chat from './views/ChatPage'; 
 import Forum from './views/CommunityForum'; 
+import PetDetail from './views/PetDetail'; 
 
 
 const AppLayout = () => {
@@ -42,6 +43,7 @@ const App = () => {
             <Route path="/contact" element={<Contact />} /> 
             <Route path="/chat" element={<Chat />} /> 
             <Route path="/forum" element={<Forum />} /> 
+            <Route path="/petdetail" element={<PetDetail />} /> 
           </Route>
           <Route path="error404" element={<div>Error 404 Page Not Found</div>} />
           <Route path="*" element={<div>Error 404 Page Not Found</div>} />
