@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { config } from "../config";
-import UserModel from "../models/user/user.model";
+import UserModel, { UserModelI } from "../models/user/user.model";
 import HttpExceptions from "../utility/exceptions/HttpExceptions";
-import { JwtPayload } from "../types";
+import { JwtPayload, UserRole } from "../types";
 
 export const authMiddleware = async (
   req: Request,
@@ -76,4 +76,26 @@ export const authMiddlewareForVerification = async (
       next(error);
     }
   }
+};
+
+export const roleMiddleware = (allowedRoles: UserRole[]) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = req.user as UserModelI;
+
+      if (!user) {
+        throw HttpExceptions.Unauthorized("Authentication required");
+      }
+
+      if (!user.role || !allowedRoles.includes(user.role)) {
+        throw HttpExceptions.Forbidden(
+          `Access denied. Required role: ${allowedRoles.join(" or ")}`
+        );
+      }
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
 };
