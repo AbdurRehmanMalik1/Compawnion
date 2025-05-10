@@ -2,6 +2,8 @@ import { Pet } from "../types/Pet";
 import { useAppSelector } from "../redux/hooks";
 import PetCard from "../components/PetCard";
 import clsx from "clsx";
+import React, { useCallback, useState } from "react";
+import AdoptCategory from "../components/adopt/AdoptCategory";
 
 const testImageUrl = `
 https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBYYFhUjvNhBJ9SwQTv8X3PyQVtd-EejwOMQ&s
@@ -15,30 +17,38 @@ const testPets: Array<Pet> = [
     new Pet('Oreo', 'Red lippy cute nice catto', testImageUrl),
 ]
 
-const filterCategories = {
-    Species: ["Cats", "Dogs", "Others"],
-    Color: ["Gray", "Black", "White", "Orange"],
-    Gender: ["Male", "Female", "Others"]
+export type FilterKey = "Species" | "Color" | "Gender" | "Breed";
 
+
+export interface FilterFormData {
+    Species: string;
+    Color?: string;
+    Gender?: string;
+    Breed?: string;
 }
 
-
-const AdoptCategory = ({ category, options }: { category: any, options: string[] }) => {
-    return (
-        <div key={category} className={clsx("flex flex-col border-t-1 border-b-1 border-[rgba(0,0,0,0.2)] py-2", "last:border-t-0")}>
-            <h1 className="font-normal text-2xl px-2 pb-2">{category}</h1>
-            {
-                options.map(option => {
-                    return (
-                        <label className={
-                            clsx("text-[rgba(0,0,0,0.8)] cursor-pointer rounded-md border-box py-2 px-2", "hover:bg-gray-300")}>{option}
-                        </label>
-                    )
-                })
-            }
-        </div>
-    )
+export interface FilterCategory {
+    options: string[];
+    prereqs?: FilterKey[];
 }
+
+const filterCategories: Record<FilterKey, FilterCategory> = {
+    Species: {
+        options: ["Cats", "Dogs", "Others"]
+    },
+    Color: {
+        options: ["Gray", "Black", "White", "Orange"]
+    },
+    Gender: {
+        options: ["Male", "Female", "Others"]
+    },
+    Breed: {
+        options: ["Persian Cat", "African Gray Parrot", "Orange Catto"],
+        prereqs: ["Species"]
+    }
+};
+
+
 
 
 const Adopt = () => {
@@ -47,9 +57,26 @@ const Adopt = () => {
     const handleSearchPet = (e: React.FormEvent) => {
         e.preventDefault();
     }
+    const [filterFormData, setFilterFormData] = useState<FilterFormData>({
+        Species: "",
+        Color: "",
+        Gender: "",
+        Breed: ""
+    });
 
+    const handleFilterChange = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            const { name, value } = e.target;
+
+            setFilterFormData((prev) => ({
+                ...prev,
+                [name]: value
+            }));
+        },
+        []
+    );
+    console.log(filterFormData);
     return (
-        // <div className="mt-10 h-full flex flex-col justify-center items-start">
         <div className="mt-5 flex flex-col items-center justify-center gap-y-5">
             <div className="flex flex-col items-center gap-y-7 border-b-1 pb-8 w-[90%] ">
                 <h1 className="text-center bolder text-4xl">Adopt a friend Right Now!</h1>
@@ -72,11 +99,22 @@ const Adopt = () => {
                         </button>
                     </form>
                 </div>
-                <div className={clsx("flex flex-col", "md:flex-row")}>
-                    <div className="flex pl-2 flex-col min-w-70">
+                <div className={clsx("flex flex-col", "md:items-start md:flex-row")}>
+                    <div className={clsx(
+                        "flex px-9 flex-col min-w-70",
+                        "md:pl-2"
+                    )}>
                         {
-                            Object.entries(filterCategories).map(([category, options]) =>
-                                <AdoptCategory category={category} options={options} />
+                            (Object.entries(filterCategories) as [FilterKey, FilterCategory][]).map(
+                                ([category, data]) => (
+                                    <AdoptCategory
+                                        key={category}
+                                        category={category}
+                                        data={data}
+                                        formData={filterFormData}
+                                        handleChange={handleFilterChange}
+                                    />
+                                )
                             )
                         }
                     </div>
