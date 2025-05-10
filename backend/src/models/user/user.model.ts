@@ -17,6 +17,7 @@ export interface UserModelI extends Document {
   avatar?: string;
   isVerified: boolean;
   createJWT: () => string;
+  comparePassword: (candidatePassword: string) => Promise<boolean>;
 }
 
 const userSchema = new mongoose.Schema({
@@ -73,6 +74,12 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password as string, salt);
   next();
 });
+
+userSchema.methods.comparePassword = async function (
+  candidatePassword: string
+) {
+  return await bcrypt.compare(candidatePassword, this.password);
+};
 
 userSchema.methods.createJWT = function () {
   const payload: JwtPayload = { userId: this._id.toString() };

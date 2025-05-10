@@ -17,6 +17,9 @@ router.post(
   authMiddlewareForVerification,
   authController.resendVerification
 );
-// router.post("/login", authValidator.login, authController.login);
+router.post("/login", authValidator.login, authController.login);
+router.post("/logout", authController.logout);
+
+// TODO: Add Forgot Password Route
 
 export default router;

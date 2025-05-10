@@ -1,13 +1,10 @@
 import crypto from "crypto";
 import { Request, Response } from "express";
-import jwt, { SignOptions } from "jsonwebtoken";
 import OTPModel from "../models/otp.model";
 import UserModel, { UserModelI } from "../models/user/user.model";
+import { getCookieOptions } from "../utility/cookie.utils";
 import HttpExceptions from "../utility/exceptions/HttpExceptions";
 import { sendOTPEmail } from "../utility/services/sendEmail";
-import { getCookieOptions } from "../utility/cookie.utils";
-import { config } from "../config";
-import { JwtPayload } from "../types";
 
 const signup = async (req: Request, res: Response) => {
   const { name, email, password, avatar } = req.body;
@@ -124,8 +121,55 @@ const resendVerification = async (req: Request, res: Response) => {
   });
 };
 
+const login = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  // Find user by email
+  const user = await UserModel.findOne({ email });
+  if (!user) {
+    throw HttpExceptions.Unauthorized("Invalid credentials");
+  }
+
+  // Check if user is verified
+  if (!user.isVerified) {
+    throw HttpExceptions.Unauthorized("Please verify your email first");
+  }
+
+  // Compare password
+  const isPasswordCorrect = await user.comparePassword(password);
+  if (!isPasswordCorrect) {
+    throw HttpExceptions.Unauthorized("Invalid credentials");
+  }
+
+  // Generate JWT token
+  const token = user.createJWT();
+
+  // Remove sensitive data from response
+  const userObj = user.toObject();
+  const { password: _, ...userWithoutSensitive } = userObj;
+
+  // Set token in cookie
+  res.cookie("token", token, getCookieOptions());
+
+  res.status(200).json({
+    message: "Login successful",
+    user: userWithoutSensitive,
+  });
+};
+
+const logout = async (req: Request, res: Response) => {
+  // Clear the token cookie
+  res.clearCookie("token", getCookieOptions());
+
+  res.status(200).json({
+    message: "Logged out successfully",
+  });
+};
+
 export const authController = {
   signup,
   verifyOTP,
   resendVerification,
+  login,
+  logout,
 };
