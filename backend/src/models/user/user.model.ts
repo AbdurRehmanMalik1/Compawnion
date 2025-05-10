@@ -3,6 +3,7 @@ import { UserRole } from "../../types";
 import { ShelterData, shelterDataSchema } from "./shelter.data";
 import { AdopterData, adopterDataSchema } from "./adopter.data";
 import { VetData, vetDataSchema } from "./vet.data";
+import bcrypt from "bcrypt";
 
 export interface UserModelI extends Document {
   name: string;
@@ -10,7 +11,7 @@ export interface UserModelI extends Document {
   password: string;
   role: UserRole | null;
   roleData: ShelterData | AdopterData | VetData | Record<string, never>;
-  avatar: string;
+  avatar?: string;
   isVerified: boolean;
 }
 
@@ -61,5 +62,14 @@ const userSchema = new mongoose.Schema({
 });
 
 const UserModel = mongoose.model<UserModelI>("User", userSchema);
+
+userSchema.pre("save", async function (next) {
+  if (!this.password || !this.isModified("password")) {
+    next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password as string, salt);
+  next();
+});
 
 export default UserModel;

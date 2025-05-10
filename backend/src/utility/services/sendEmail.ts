@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import { Attachment } from "nodemailer/lib/mailer";
-import HttpExceptions from "./exceptions/HttpExceptions";
-import { config } from "../config";
+import HttpExceptions from "../exceptions/HttpExceptions";
+import { config } from "../../config";
 
 interface SendMailOptions {
   subject: string;
