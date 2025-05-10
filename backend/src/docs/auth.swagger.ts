@@ -55,10 +55,6 @@
  *                       type: string
  *                     isVerified:
  *                       type: boolean
- *       409:
- *         description: Email already in use
- *       400:
- *         description: Invalid input data
  */
 
 /**
@@ -107,10 +103,6 @@
  *                       type: string
  *                     isVerified:
  *                       type: boolean
- *       400:
- *         description: Invalid or expired OTP
- *       404:
- *         description: User not found
  */
 
 /**
@@ -210,4 +202,92 @@
  *                 message:
  *                   type: string
  *                   example: Logged out successfully
+ */
+
+/**
+ * @swagger
+ * /api/auth/register-role:
+ *   post:
+ *     tags:
+ *       - Authentication
+ *     summary: Register user role
+ *     description: Assign a specific role to a verified user
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - role
+ *               - roleData
+ *             properties:
+ *               role:
+ *                 type: string
+ *                 enum: [SHELTER, ADOPTER, VETERINARIAN]
+ *                 description: The role to assign to the user
+ *               roleData:
+ *                 type: object
+ *                 description: Data specific to the role
+ *                 properties:
+ *                   shelterName:
+ *                     type: string
+ *                     description: Name of the shelter (required for SHELTER role)
+ *                   address:
+ *                     type: string
+ *                     description: Address of the shelter (required for SHELTER role)
+ *                   location:
+ *                     type: object
+ *                     description: Location coordinates (required for SHELTER role)
+ *                     properties:
+ *                       type:
+ *                         type: string
+ *                         enum: [Point]
+ *                         description: Type of the location (always Point)
+ *                       coordinates:
+ *                         type: array
+ *                         items:
+ *                           type: number
+ *                         minItems: 2
+ *                         maxItems: 2
+ *                         description: Array of [longitude, latitude] coordinates
+ *                         example: [-73.935242, 40.730610]
+ *                   phone:
+ *                     type: string
+ *                     description: Contact phone number (optional)
+ *                   description:
+ *                     type: string
+ *                     description: Description of the shelter (optional)
+ *     responses:
+ *       200:
+ *         description: Role registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Role registered successfully
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     avatar:
+ *                       type: string
+ *                     isVerified:
+ *                       type: boolean
+ *                     role:
+ *                       type: string
+ *                       enum: [ADOPTER, SHELTER, VETERINARIAN, null]
+ *                     roleData:
+ *                       type: object
+ *                       nullable: true
  */

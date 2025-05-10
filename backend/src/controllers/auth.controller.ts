@@ -166,10 +166,40 @@ const logout = async (req: Request, res: Response) => {
   });
 };
 
+const registerRole = async (req: Request, res: Response) => {
+  const { role, roleData } = req.body;
+  const user = req.user as UserModelI;
+
+  // Check if user is verified
+  if (!user.isVerified) {
+    throw HttpExceptions.Unauthorized("Please verify your email first");
+  }
+
+  // Check if user already has a role
+  if (user.role !== null) {
+    throw HttpExceptions.BadRequest("User already has a role assigned");
+  }
+
+  // Update user with role and role data
+  user.role = role;
+  user.roleData = roleData;
+  await user.save();
+
+  // Remove sensitive data from response
+  const userObj = user.toObject();
+  const { password: _, ...userWithoutSensitive } = userObj;
+
+  res.status(200).json({
+    message: "Role registered successfully",
+    user: userWithoutSensitive,
+  });
+};
+
 export const authController = {
   signup,
   verifyOTP,
   resendVerification,
   login,
   logout,
+  registerRole,
 };

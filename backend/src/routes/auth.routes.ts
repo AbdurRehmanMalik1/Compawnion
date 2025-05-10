@@ -2,7 +2,11 @@ import { Router } from "express";
 import { authValidator } from "../validators/auth.validator";
 import { authController } from "../controllers/auth.controller";
 import "../docs/auth.swagger";
-import { authMiddlewareForVerification } from "../middlewares/auth.middleware";
+import {
+  authMiddlewareForVerification,
+  authMiddleware,
+} from "../middlewares/auth.middleware";
+
 const router = Router();
 
 router.post("/signup", authValidator.signup, authController.signup);
@@ -18,7 +22,13 @@ router.post(
   authController.resendVerification
 );
 router.post("/login", authValidator.login, authController.login);
-router.post("/logout", authController.logout);
+router.post("/logout", authMiddleware, authController.logout);
+router.post(
+  "/register-role",
+  authMiddleware,
+  authValidator.registerRole,
+  authController.registerRole
+);
 
 // TODO: Add Forgot Password Route
 

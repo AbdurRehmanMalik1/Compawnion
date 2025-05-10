@@ -1,5 +1,6 @@
 import { body } from "express-validator";
 import { validateRequest } from "./validateRequest";
+import { UserRole } from "../types";
 
 const signupValidator = [
   body("name")
@@ -56,8 +57,55 @@ const verifyOTPValidator = [
   validateRequest,
 ];
 
+const registerRoleValidator = [
+  body("role")
+    .trim()
+    .notEmpty()
+    .withMessage("Role is required")
+    .isIn(Object.values(UserRole))
+    .withMessage("Invalid role"),
+
+  body("roleData")
+    .notEmpty()
+    .withMessage("Role data is required")
+    .custom((value, { req }) => {
+      const role = req.body.role;
+
+      if (role === UserRole.SHELTER) {
+        if (!value.shelterName) {
+          throw new Error("Shelter name is required");
+        }
+        if (!value.address) {
+          throw new Error("Shelter address is required");
+        }
+        if (!value.location || !value.location.coordinates) {
+          throw new Error("Shelter location is required");
+        }
+        if (value.location.coordinates.length !== 2) {
+          throw new Error("Location must have longitude and latitude");
+        }
+        const [longitude, latitude] = value.location.coordinates;
+        if (longitude < -180 || longitude > 180) {
+          throw new Error("Longitude must be between -180 and 180");
+        }
+        if (latitude < -90 || latitude > 90) {
+          throw new Error("Latitude must be between -90 and 90");
+        }
+      }
+
+      // Add validation for other roles here
+      // if (role === UserRole.ADOPTER) { ... }
+      // if (role === UserRole.VETERINARIAN) { ... }
+
+      return true;
+    }),
+
+  validateRequest,
+];
+
 export const authValidator = {
   signup: signupValidator,
   login: loginValidator,
   verifyOTP: verifyOTPValidator,
+  registerRole: registerRoleValidator,
 };

@@ -54,6 +54,9 @@ const userSchema = new mongoose.Schema({
     validate: {
       validator: function (this: any, value: any) {
         if (!this.role) return true;
+        if (this.role === UserRole.SHELTER) {
+          return value && value.shelterName && value.address && value.location;
+        }
         return value && Object.keys(value).length > 0;
       },
       message: "roleData must be provided when role is set",

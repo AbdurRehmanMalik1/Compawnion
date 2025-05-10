@@ -5,7 +5,7 @@ const config = {
   port: process.env.PORT || "5000",
   mongoUrl: process.env.MONGO_URL || "mongodb://localhost:27017/compawion",
   cors: {
-    origin: true, // Allow all origins for now
+    origin: true, // Allow all origins for now. TODO: Change to frontend url
   },
   email: {
     service: process.env.EMAIL_SERVICE || "gmail",
