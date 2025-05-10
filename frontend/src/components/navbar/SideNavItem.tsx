@@ -1,6 +1,5 @@
 import React from "react";
 import { NavLink } from "react-router";
-import NavDropDown from "./NavDropDown";
 
 interface SideNavItemProps {
     name: string;

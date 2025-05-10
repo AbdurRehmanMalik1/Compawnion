@@ -2,7 +2,7 @@ import { Route, Routes, BrowserRouter as Router, Outlet } from 'react-router';
 import './App.css';
 import Login from './views/Login'
 import Signup from './views/Signup'
-import Navbar from './components/Navbar'
+import Navbar from './components/navbar/Navbar'
 import Home from './views/Home'
 import VerifyCode from './views/VerifyCode'
 import Adopt from './views/Adopt'
@@ -32,7 +32,7 @@ const App = () => {
             <Route index element={<Home />} />
             <Route path='about' element={<AboutUs/>}/>
             <Route path='contact' element={<ContactUs/>}/>
-            <Route path='signUpDetails' element={<SignUpDetails/>}/>
+            <Route path='signup-details' element={<SignUpDetails/>}/>
             <Route path='signup' element={<Outlet />} >
               <Route index element={<Signup />} />
               <Route path='verifyCode' element={<VerifyCode />} />

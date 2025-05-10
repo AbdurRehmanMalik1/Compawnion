@@ -1,10 +1,9 @@
-import '../style/Navbar.css';
 import { useCallback, useEffect, useState } from "react";
 import React from "react";
 import clsx from "clsx";
 import NavItem from "./NavItem";
 import SideNavItem from './SideNavItem';
-import TitleAndIcon from './TitleAndIcon';
+import TitleAndIcon from '../TitleAndIcon';
 
 const navItems = [
     {

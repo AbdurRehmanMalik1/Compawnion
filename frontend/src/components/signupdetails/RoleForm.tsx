@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React from "react";
 
 interface FormData {
@@ -28,7 +29,11 @@ const RoleForm: React.FC<RoleFormProps> = ({ formData, handleChange }) => {
           />
           <label
             htmlFor={role}
-            className="cursor-pointer block px-4 py-2 border rounded-md peer-checked:bg-blue-500 peer-checked:text-white"
+            className={clsx(
+              "bg-[var(--color-primary)] text-white cursor-pointer block px-4 py-2 border rounded-md "
+              ,"peer-checked:bg-[var(--color-secondary)] peer-checked:text-white",
+              "hover:opacity-90"
+            )} 
           >
             {role}
           </label>

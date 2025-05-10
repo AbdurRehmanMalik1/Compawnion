@@ -1,7 +1,21 @@
 import React, { useState, useEffect } from "react";
-import RoleForm from "../components/RoleForm";
-import ProfileForm from "../components/ProfileForm";
-import AddressForm from "../components/AddressForm";
+import RoleForm from "../components/signupdetails/RoleForm";
+import ProfileForm from "../components/signupdetails/ProfileForm";
+import AddressForm from "../components/signupdetails/AddressForm";
+import clsx from "clsx";
+
+interface FormData {
+    role: string;
+    profilePic: File | null;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    street: string;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
+}
 
 const SignUpDetails: React.FC = () => {
     const [step, setStep] = useState(0);
@@ -21,7 +35,7 @@ const SignUpDetails: React.FC = () => {
         return () => clearInterval(interval);
     }, []);
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         role: "",
         profilePic: null,
         firstName: "",
@@ -49,33 +63,63 @@ const SignUpDetails: React.FC = () => {
         <ProfileForm formData={formData} handleChange={handleChange} />,
         <AddressForm formData={formData} handleChange={handleChange} />,
     ];
+    const submitSignUpDetailsForm = (e: React.FormEvent) => {
+        e.preventDefault();
 
+        console.log("Submitted Form")
+        console.log(formData);
+
+    }
     return (
         <div
-            className="min-h-screen bg-cover bg-center flex items-center justify-center transition-all duration-1000"
+            className="min-h-screen px-4 bg-cover bg-center flex items-center justify-center transition-all duration-1000"
             style={{
                 backgroundImage: `url(${backgroundImages[currentBg]})`,
+                objectFit: "cover"
             }}
         >
-            <div className="max-w-md w-full p-6 rounded shadow bg-white/30">
+            <form onSubmit={submitSignUpDetailsForm} className="max-w-md w-full p-6  rounded shadow bg-white/90">
                 {formSteps[step]}
                 <div className="mt-4 flex justify-between">
                     <button
                         onClick={() => setStep(step - 1)}
                         disabled={step === 0}
-                        className="px-4 py-2 border rounded disabled:opacity-50"
+                        type="button"
+                        className={clsx(
+                            "bg-[var(--color-secondary)] text-white border-none px-4 py-2 border rounded cursor-pointer",
+                            "disabled:opacity-50 disabled:cursor-default",
+                            "hover:opacity-80"
+                        )}
                     >
                         Back
                     </button>
-                    <button
-                        onClick={() => setStep(step + 1)}
-                        disabled={step === formSteps.length - 1}
-                        className="px-4 py-2 bg-blue-500 text-white rounded"
-                    >
-                        Next
-                    </button>
+                    {
+                        formSteps.length - 1 === step ?
+                            <button
+                                type="submit"
+                                className={clsx(
+                                    "bg-[var(--color-primary)] border-none px-4 py-2 text-white rounded cursor-pointer",
+                                    "hover:opacity-80"
+                                )}
+                            >
+                                Finish
+                            </button>
+                            :
+                            <button
+                                onClick={() => setStep(step + 1)}
+                                disabled={step === formSteps.length - 1}
+                                type="button"
+                                className={clsx(
+                                    "bg-[var(--color-primary)] border-none px-4 py-2 text-white rounded cursor-pointer",
+                                    "hover:opacity-80"
+                                )}
+                            >
+                                Next
+                            </button>
+                    }
+
                 </div>
-            </div>
+            </form>
         </div>
     );
 };
