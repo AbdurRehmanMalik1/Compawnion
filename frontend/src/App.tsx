@@ -11,10 +11,13 @@ import { useAppSelector } from './redux/hooks'
 import AboutUs from './views/About';
 import ContactUs from './views/Contact';
 import SignUpDetails from './views/SignUpDetails';
+import PublicRoute from './components/PublicRoute';
+
+
 
 
 const AppLayout = () => {
-  let  isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
+  let isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
   isAuthenticated = false;
   return (
     <div className="flex flex-col h-full flex-grow">
@@ -23,6 +26,8 @@ const AppLayout = () => {
     </div>
   )
 }
+
+
 const App = () => {
   return (
     <>
@@ -30,14 +35,14 @@ const App = () => {
         <Routes>
           <Route path='/' element={<AppLayout />}>
             <Route index element={<Home />} />
-            <Route path='about' element={<AboutUs/>}/>
-            <Route path='contact' element={<ContactUs/>}/>
-            <Route path='signup-details' element={<SignUpDetails/>}/>
-            <Route path='signup' element={<Outlet />} >
-              <Route index element={<Signup />} />
-              <Route path='verifyCode' element={<VerifyCode />} />
+            <Route path='about' element={<AboutUs />} />
+            <Route path='contact' element={<ContactUs />} />
+            <Route path='signup-details' element={<SignUpDetails />} />
+            <Route path='signup' element={<PublicRoute><Outlet /></PublicRoute>} >
+              <Route index element={<PublicRoute><Signup /></PublicRoute>} />
+              <Route path='verifyCode' element={<PrivateRoute><VerifyCode /></PrivateRoute>} />
             </Route>
-            <Route path='login' element={<Login />} />
+            <Route path='login' element={<PublicRoute><Login /></PublicRoute>} />
             <Route path='adopt' element={<PrivateRoute><Adopt /></PrivateRoute>}></Route>
           </Route>
           <Route path='error404' element={<div>Error 404 Page Not Found</div>} />

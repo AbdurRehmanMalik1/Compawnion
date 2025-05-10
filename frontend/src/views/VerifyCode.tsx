@@ -1,48 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { apiServer } from "../apiconfig";
 import { getAxiosErrorData } from "../utility";
 import clsx from "clsx";
 import Spinner from "../components/Spinner";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { verifyOTP } from "../redux/slices/authSlice";
 
 const testUser = {
-    name: 'bro',
-    email: 'bro@gmail.com',
-    password: '1234'
+    name: 'Abdur Rehman Malik',
+    email: 'abdurrehman4415@gmail.com',
+    password: '123456'
 }
 
 const VerifyCode = () => {
-    const navigate = useNavigate();
-    const [code, setCode] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string>('');
     const location = useLocation() || null;
-    // useEffect(() => {
-    //     if (!location?.state) navigate('/error404');
-    // }, [location, navigate]);
+    const { name, email, password } = location?.state;
 
-    const { name, email, password } = location?.state ?? testUser;
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const { loading, error, isVerified } = useAppSelector(state => state.auth);
+
+    useEffect(() => {
+        if (!location.state) {
+            navigate("/login");
+        }
+    }, [location, navigate]);
+
+    useEffect(() => {
+        if (isVerified) {
+            navigate("/adopt");
+        }
+    }, [isVerified, navigate]);
+
+    const [code, setCode] = useState<string>('');
+
+
+
 
     const backgroundUrl = `https://images.unsplash.com/photo-1523480717984-24cba35ae1ef?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9nJTIwYmFja2dyb3VuZHxlbnwwfHwwfHx8MA%3D%3D`
     const removeUpDownArrow: string = `appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`;
 
-    const submitVerifyCode = (e: React.FormEvent) => {
+    const submitVerifyCode = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
-        apiServer.post('verifyCode', { code })
-            .then(_res => {
-                setLoading(false);
-                setError('');
-                navigate('/dashboard');
-            }).catch(err => {
-                setLoading(false);
-                const data = getAxiosErrorData(err);
-                if (data.error)
-                    setError(data.error?.message);
-                else
-                    setError('Could not verify the code');
-            })
-        console.log(code);
+        //Sending otp: code
+        const resultAction = await dispatch(verifyOTP(code));
+
+        if (verifyOTP.fulfilled.match(resultAction)) {
+            navigate('/login', { state: { email } });
+        }
     }
 
     return (

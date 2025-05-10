@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router";
 import { apiServer } from "../apiconfig";
 import { getAxiosErrorData } from "../utility";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { signupUser } from "../redux/slices/authSlice";
 
 interface SignupForm {
     name: string,
     email: string,
-    password: string
+    password: string,
+    avatar: string | undefined
 }
 const Signup = () => {
 
@@ -22,32 +25,30 @@ const Signup = () => {
     const CenterRightPageButton: string = `${LinkStyle} w-20 bg-[var(--color-primary)] rounded-br-xl rounded-tr-xl px-5 py-3 ${lowerOpacityHover}`;
     const CenterRightActivePageButton: string = `${LinkStyle} w-20 bg-[var(--color-secondary)] rounded-br-xl rounded-tr-xl px-5 py-3 ${lowerOpacityHover}`;
 
-    const [error, setError] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(false);
     const navigate = useNavigate();
     const [formData, setFormData] = useState<SignupForm>({
         name: '',
         email: '',
         password: '',
+        avatar: undefined,
     });
-    const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
+    const dispatch = useAppDispatch();
+    const { loading, error, isAuthenticated } = useAppSelector(state => state.auth);
+
+    useEffect(() => {
+        if (isAuthenticated)
+            navigate('/adopt')
+    }, [isAuthenticated, navigate])
+    const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const { name, email, password } = formData;
-        setLoading(true);
-        apiServer.post('/signup', { name, email, password })
-            .then((_res) => {
-                //const data = res.data;
-                setError('');
-                setLoading(false);
-                navigate('verifyCode', { state: { name, email, password } });
-            }).catch(err => {
-                setLoading(false);
-                const data = getAxiosErrorData(err);
-                if (data.error)
-                    setError(data.error?.message);
-                else
-                    setError('Unknown Error');
-            })
+        console.log('Dispatching Form Data');
+        console.log(JSON.stringify(formData));
+        const resultAction = await dispatch(signupUser({ ...formData }));
+
+        if (signupUser.fulfilled.match(resultAction)) {
+            navigate('verifyCode', { state: { name, email, password } });
+        }
     }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;

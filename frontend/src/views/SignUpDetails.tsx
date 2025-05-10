@@ -3,6 +3,7 @@ import RoleForm from "../components/signupdetails/RoleForm";
 import ProfileForm from "../components/signupdetails/ProfileForm";
 import AddressForm from "../components/signupdetails/AddressForm";
 import clsx from "clsx";
+import { useAppDispatch } from "../redux/hooks";
 
 interface FormData {
     role: string;
@@ -63,11 +64,31 @@ const SignUpDetails: React.FC = () => {
         <ProfileForm formData={formData} handleChange={handleChange} />,
         <AddressForm formData={formData} handleChange={handleChange} />,
     ];
+//     {
+//   "role": "SHELTER",
+//   "roleData": {
+//     "shelterName": "string",
+//     "address": "string",
+//     "location": {
+//       "type": "Point",
+//       "coordinates": [
+//         -73.935242,
+//         40.73061
+//       ]
+//     },
+//     "phone": "string",
+//     "description": "string"
+//   }
+// }
+    const dispatch = useAppDispatch();
+    
     const submitSignUpDetailsForm = (e: React.FormEvent) => {
         e.preventDefault();
 
         console.log("Submitted Form")
         console.log(formData);
+
+
 
     }
     return (

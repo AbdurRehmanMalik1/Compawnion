@@ -13,5 +13,8 @@ const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
+const unsubscribe = store.subscribe(() => {
+    console.log("Updated State: ", JSON.stringify(store.getState()))
+})
 
 export default store;

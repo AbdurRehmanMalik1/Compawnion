@@ -1,14 +1,23 @@
 import { useNavigate } from "react-router";
 import { useAppSelector } from "../redux/hooks"
+import Spinner from "./Spinner";
+import { useEffect } from "react";
+
+const roleList =  ['adopter', 'shelter', 'veterinarian']
 
 const PrivateRoute = ({ children }: { children: React.JSX.Element }) => {
     const navigate = useNavigate();
-    const { isAuthenticated } = useAppSelector(state => state.auth);
-    if (!isAuthenticated)
-        navigate('/');
-
+    const { isAuthenticated , role } = useAppSelector(state => state.auth);
+    useEffect(() => {
+        if (!isAuthenticated) {
+            navigate('/login');
+        }
+        // if(!role || !roleList.includes(role.toLowerCase()))
+        //     navigate('/signup-details');
+    }, [isAuthenticated, navigate]);
     return (
-        children
+        isAuthenticated ? children : <Spinner size={30} />
+
     );
 }
 
