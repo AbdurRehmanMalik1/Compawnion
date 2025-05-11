@@ -59,8 +59,8 @@ const App = () => {
             <Route path='chats' element={<ChatList />} />
             <Route path='livestream' element={<LiveStreamPage />} />
             <Route path='add-pet' element={<PetForm />} />
-            <Route path="/petdetail" element={<PetDetail />} />
-            <Route path="/vetappointment" element={<VetAppointments />} />
+            <Route path="petdetail" element={<PetDetail />} />
+            <Route path="vetappointment" element={<VetAppointments />} />
             <Route path='logout' element={<PrivateRoute><LogoutPage /></PrivateRoute>} />
             <Route path='signup' element={<PublicRoute><Outlet /></PublicRoute>} >
               <Route index element={<PublicRoute><Signup /></PublicRoute>} />

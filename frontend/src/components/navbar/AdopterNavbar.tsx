@@ -8,7 +8,7 @@ import TitleAndIcon from '../TitleAndIcon';
 const navItems = [
     {
         name: 'Browse Pets',
-        path: '/browse',
+        path: '/adopt',
         clickable: true,
     },
     {
@@ -18,7 +18,7 @@ const navItems = [
     },
     {
         name: 'Appointments',
-        path: '/appointments',
+        path: '/vetappointment',
         clickable: true,
     },
     {
