@@ -193,13 +193,38 @@ const registerRole = async (req: Request, res: Response) => {
     message: "Role registered successfully",
     user: userWithoutSensitive,
   });
+
 };
 
-export const authController = {
-  signup,
-  verifyOTP,
-  resendVerification,
-  login,
-  logout,
-  registerRole,
-};
+const autoLogin = async (req: Request, res: Response) => {
+  const user = req.user as UserModelI;
+
+  if (!user) {
+    throw HttpExceptions.Unauthorized("User not authenticated");
+  }
+
+  // If the user is not verified, return an error
+  if (!user.isVerified) {
+    throw HttpExceptions.Unauthorized("Please verify your email first");
+  }
+  // Remove sensitive data from user object
+  const userObj = user.toObject();
+  const { password: _, ...userWithoutSensitive } = userObj;
+
+  console.log(userObj);
+
+  res.status(200).json({
+    message: "Auto-login successful",
+    user: userWithoutSensitive,
+  });
+}
+  
+  export const authController = {
+    signup,
+    verifyOTP,
+    resendVerification,
+    login,
+    autoLogin,
+    logout,
+    registerRole,
+  };

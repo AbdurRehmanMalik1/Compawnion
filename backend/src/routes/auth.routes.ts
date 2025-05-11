@@ -24,6 +24,9 @@ router.post(
   authController.resendVerification
 );
 router.post("/login", authValidator.login, authController.login);
+router.get("/me" ,authMiddleware ,authController.autoLogin);
+
+
 router.post("/logout", authMiddleware, authController.logout);
 router.post(
   "/register-role",
