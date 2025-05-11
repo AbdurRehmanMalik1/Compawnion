@@ -3,8 +3,11 @@ import RoleForm from "../components/signupdetails/RoleForm";
 import ProfileForm from "../components/signupdetails/ProfileForm";
 import AddressForm from "../components/signupdetails/AddressForm";
 import clsx from "clsx";
-import { useAppDispatch } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { useNavigate } from "react-router";
 
+
+const roleList = ['adopter', 'shelter', 'veterinarian']
 interface FormData {
     role: string;
     profilePic: File | null;
@@ -48,7 +51,20 @@ const SignUpDetails: React.FC = () => {
         zip: "",
         country: ""
     });
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const { role } = useAppSelector(state => state.auth);
 
+    useEffect(() => {
+        if (roleList.includes(role))
+            navigate('/adopt')
+    }, [navigate, role])
+
+    const submitSignUpDetailsForm = (e: React.FormEvent) => {
+        e.preventDefault();
+        console.log("Submitted Form")
+        console.log(formData);
+    }
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement>
     ) => {
@@ -64,33 +80,6 @@ const SignUpDetails: React.FC = () => {
         <ProfileForm formData={formData} handleChange={handleChange} />,
         <AddressForm formData={formData} handleChange={handleChange} />,
     ];
-//     {
-//   "role": "SHELTER",
-//   "roleData": {
-//     "shelterName": "string",
-//     "address": "string",
-//     "location": {
-//       "type": "Point",
-//       "coordinates": [
-//         -73.935242,
-//         40.73061
-//       ]
-//     },
-//     "phone": "string",
-//     "description": "string"
-//   }
-// }
-    const dispatch = useAppDispatch();
-    
-    const submitSignUpDetailsForm = (e: React.FormEvent) => {
-        e.preventDefault();
-
-        console.log("Submitted Form")
-        console.log(formData);
-
-
-
-    }
     return (
         <div
             className="min-h-screen px-4 bg-cover bg-center flex items-center justify-center transition-all duration-1000"

@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { apiServer } from "../apiconfig";
-import { getAxiosErrorData } from "../utility";
 import clsx from "clsx";
 import Spinner from "../components/Spinner";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
@@ -14,29 +12,25 @@ const testUser = {
 }
 
 const VerifyCode = () => {
-    const location = useLocation() || null;
-    const { name, email, password } = location?.state;
+    
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { loading, error, isVerified } = useAppSelector(state => state.auth);
+    const { loading, error, isVerified ,isAuthenticated ,name,email} = useAppSelector(state => state.auth);
 
     useEffect(() => {
-        if (!location.state) {
+        if (!isAuthenticated) {
             navigate("/login");
         }
     }, [location, navigate]);
 
     useEffect(() => {
-        if (isVerified) {
+        if (isVerified && isAuthenticated) {
             navigate("/adopt");
         }
     }, [isVerified, navigate]);
 
     const [code, setCode] = useState<string>('');
-
-
-
 
     const backgroundUrl = `https://images.unsplash.com/photo-1523480717984-24cba35ae1ef?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9nJTIwYmFja2dyb3VuZHxlbnwwfHwwfHx8MA%3D%3D`
     const removeUpDownArrow: string = `appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`;

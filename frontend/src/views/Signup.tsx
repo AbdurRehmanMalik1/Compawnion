@@ -33,7 +33,7 @@ const Signup = () => {
         avatar: undefined,
     });
     const dispatch = useAppDispatch();
-    const { loading, error, isAuthenticated } = useAppSelector(state => state.auth);
+    const { loading, error, isAuthenticated , isVerified} = useAppSelector(state => state.auth);
 
     useEffect(() => {
         if (isAuthenticated)
@@ -41,14 +41,9 @@ const Signup = () => {
     }, [isAuthenticated, navigate])
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const { name, email, password } = formData;
         console.log('Dispatching Form Data');
         console.log(JSON.stringify(formData));
-        const resultAction = await dispatch(signupUser({ ...formData }));
-
-        if (signupUser.fulfilled.match(resultAction)) {
-            navigate('verifyCode', { state: { name, email, password } });
-        }
+        dispatch(signupUser({ ...formData }));
     }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;

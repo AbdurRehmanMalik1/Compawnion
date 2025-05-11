@@ -36,7 +36,7 @@ const AppLayout = () => {
   console.log(name)
   return (
     <div className="flex flex-col h-full flex-grow">
-      {!isAuthenticated ? <Navbar /> : role.toLowerCase() === 'adopter'.toLowerCase() ? <AdopterNavbar /> : null}
+      {!isAuthenticated ? <Navbar /> : !role || role.toLowerCase() === 'adopter'.toLowerCase() ? <AdopterNavbar /> : null}
       {/* <Navbar /> */}
       <Outlet />
     </div>
@@ -60,7 +60,7 @@ const App = () => {
             <Route path='logout' element={<PrivateRoute><LogoutPage /></PrivateRoute>} />
             <Route path='signup' element={<PublicRoute><Outlet /></PublicRoute>} >
               <Route index element={<PublicRoute><Signup /></PublicRoute>} />
-              <Route path='verifyCode' element={<PrivateRoute><VerifyCode /></PrivateRoute>} />
+              <Route path='verifyCode' element={<VerifyCode />} />
             </Route>
             <Route path='login' element={<PublicRoute><Login /></PublicRoute>} />
             <Route path='adopt' element={<PrivateRoute><Adopt /></PrivateRoute>}></Route>
