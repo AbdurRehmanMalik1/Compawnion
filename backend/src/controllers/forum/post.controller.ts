@@ -224,125 +224,54 @@ const deletePost = async (req: Request, res: Response) => {
 };
 
 // Vote on a post (upvote or downvote)
-const votePost = withTransaction(
-  async (req: Request, res: Response, session: ClientSession) => {
-    const { postId } = req.params;
-    const { voteType } = req.body; // "upvote" or "downvote"
-    const user = req.user as UserModelI;
+const votePost = async (req: Request, res: Response) => {
+  const { postId } = req.params;
+  const { voteType } = req.body; // "upvote" or "downvote"
+  const user = req.user as UserModelI;
 
-    if (!["upvote", "downvote"].includes(voteType)) {
-      throw HttpExceptions.BadRequest("Invalid vote type");
-    }
+  if (!["upvote", "downvote"].includes(voteType)) {
+    throw HttpExceptions.BadRequest("Invalid vote type");
+  }
 
-    const post = await ForumPostModel.findOne({
-      _id: postId,
-      isDeleted: false,
-    }).session(session);
+  const post = await ForumPostModel.findOne({
+    _id: postId,
+    isDeleted: false,
+  });
 
-    if (!post) {
-      throw HttpExceptions.NotFound("Post not found");
-    }
+  if (!post) {
+    throw HttpExceptions.NotFound("Post not found");
+  }
 
-    // Check if user has already voted
-    const existingVoteIndex = post.votes.findIndex(
-      (vote) => vote.userId.toString() === user._id.toString()
-    );
+  // Check if user has already voted
+  const existingVoteIndex = post.votes.findIndex(
+    (vote) => vote.userId.toString() === user._id.toString()
+  );
 
-    // Update vote counts and user activity based on vote action
-    const postAuthorActivity = await ForumUserActivityModel.findOne({
-      userId: post.userId,
-    }).session(session);
+  // Update vote counts and user activity based on vote action
+  const postAuthorActivity = await ForumUserActivityModel.findOne({
+    userId: post.userId,
+  });
 
-    if (existingVoteIndex !== -1) {
-      const existingVote = post.votes[existingVoteIndex];
+  if (existingVoteIndex !== -1) {
+    const existingVote = post.votes[existingVoteIndex];
 
-      // If same vote type, remove the vote (toggle)
-      if (existingVote.type === voteType) {
-        // Remove vote
-        post.votes.splice(existingVoteIndex, 1);
-
-        // Update vote counts
-        if (voteType === "upvote") {
-          post.upvoteCount -= 1;
-          if (postAuthorActivity) {
-            postAuthorActivity.upvotesReceived -= 1;
-            postAuthorActivity.reputationScore -= 1;
-          }
-        } else {
-          post.downvoteCount -= 1;
-          if (postAuthorActivity) {
-            postAuthorActivity.downvotesReceived -= 1;
-            postAuthorActivity.reputationScore += 1;
-          }
-        }
-
-        // Update user activity for voter
-        await ForumUserActivityModel.findOneAndUpdate(
-          { userId: user._id },
-          {
-            $inc: {
-              [`${voteType}sGiven`]: -1,
-            },
-          },
-          { session, upsert: true }
-        );
-      } else {
-        // Change vote type
-        existingVote.type = voteType;
-        existingVote.createdAt = new Date();
-
-        // Update vote counts
-        if (voteType === "upvote") {
-          post.upvoteCount += 1;
-          post.downvoteCount -= 1;
-          if (postAuthorActivity) {
-            postAuthorActivity.upvotesReceived += 1;
-            postAuthorActivity.downvotesReceived -= 1;
-            postAuthorActivity.reputationScore += 2; // +1 for upvote, +1 for removing downvote
-          }
-        } else {
-          post.upvoteCount -= 1;
-          post.downvoteCount += 1;
-          if (postAuthorActivity) {
-            postAuthorActivity.upvotesReceived -= 1;
-            postAuthorActivity.downvotesReceived += 1;
-            postAuthorActivity.reputationScore -= 2; // -1 for downvote, -1 for removing upvote
-          }
-        }
-
-        // Update user activity for voter
-        await ForumUserActivityModel.findOneAndUpdate(
-          { userId: user._id },
-          {
-            $inc: {
-              [`${voteType}sGiven`]: 1,
-              [`${voteType === "upvote" ? "downvote" : "upvote"}sGiven`]: -1,
-            },
-            $set: { lastVoteAt: new Date() },
-          },
-          { session, upsert: true }
-        );
-      }
-    } else {
-      // Add new vote
-      post.votes.push({
-        userId: user._id as any,
-        type: voteType,
-        createdAt: new Date(),
-      });
+    // If same vote type, remove the vote (toggle)
+    if (existingVote.type === voteType) {
+      // Remove vote
+      post.votes.splice(existingVoteIndex, 1);
 
       // Update vote counts
       if (voteType === "upvote") {
-        post.upvoteCount += 1;
+        post.upvoteCount -= 1;
         if (postAuthorActivity) {
-          postAuthorActivity.upvotesReceived += 1;
-          postAuthorActivity.reputationScore += 1;
+          postAuthorActivity.upvotesReceived -= 1;
+          postAuthorActivity.reputationScore -= 1;
         }
       } else {
-        post.downvoteCount += 1;
+        post.downvoteCount -= 1;
         if (postAuthorActivity) {
-          postAuthorActivity.downvotesReceived += 1;
-          postAuthorActivity.reputationScore -= 1;
+          postAuthorActivity.downvotesReceived -= 1;
+          postAuthorActivity.reputationScore += 1;
         }
       }
 
@@ -350,30 +279,99 @@ const votePost = withTransaction(
       await ForumUserActivityModel.findOneAndUpdate(
         { userId: user._id },
         {
-          $inc: { [`${voteType}sGiven`]: 1 },
+          $inc: {
+            [`${voteType}sGiven`]: -1,
+          },
+        },
+        { upsert: true }
+      );
+    } else {
+      // Change vote type
+      existingVote.type = voteType;
+      existingVote.createdAt = new Date();
+
+      // Update vote counts
+      if (voteType === "upvote") {
+        post.upvoteCount += 1;
+        post.downvoteCount -= 1;
+        if (postAuthorActivity) {
+          postAuthorActivity.upvotesReceived += 1;
+          postAuthorActivity.downvotesReceived -= 1;
+          postAuthorActivity.reputationScore += 2; // +1 for upvote, +1 for removing downvote
+        }
+      } else {
+        post.upvoteCount -= 1;
+        post.downvoteCount += 1;
+        if (postAuthorActivity) {
+          postAuthorActivity.upvotesReceived -= 1;
+          postAuthorActivity.downvotesReceived += 1;
+          postAuthorActivity.reputationScore -= 2; // -1 for downvote, -1 for removing upvote
+        }
+      }
+
+      // Update user activity for voter
+      await ForumUserActivityModel.findOneAndUpdate(
+        { userId: user._id },
+        {
+          $inc: {
+            [`${voteType}sGiven`]: 1,
+            [`${voteType === "upvote" ? "downvote" : "upvote"}sGiven`]: -1,
+          },
           $set: { lastVoteAt: new Date() },
         },
-        { session, upsert: true }
+        { upsert: true }
       );
     }
+  } else {
+    // Add new vote
+    post.votes.push({
+      userId: user._id as any,
+      type: voteType,
+      createdAt: new Date(),
+    });
 
-    // Save changes
-    if (postAuthorActivity) {
-      await postAuthorActivity.save({ session });
+    // Update vote counts
+    if (voteType === "upvote") {
+      post.upvoteCount += 1;
+      if (postAuthorActivity) {
+        postAuthorActivity.upvotesReceived += 1;
+        postAuthorActivity.reputationScore += 1;
+      }
+    } else {
+      post.downvoteCount += 1;
+      if (postAuthorActivity) {
+        postAuthorActivity.downvotesReceived += 1;
+        postAuthorActivity.reputationScore -= 1;
+      }
     }
 
-    await post.save({ session });
-
-    res.status(200).json({
-      success: true,
-      message: `Post ${voteType}d successfully`,
-      data: {
-        upvoteCount: post.upvoteCount,
-        downvoteCount: post.downvoteCount,
+    // Update user activity for voter
+    await ForumUserActivityModel.findOneAndUpdate(
+      { userId: user._id },
+      {
+        $inc: { [`${voteType}sGiven`]: 1 },
+        $set: { lastVoteAt: new Date() },
       },
-    });
+      { upsert: true }
+    );
   }
-);
+
+  // Save changes
+  if (postAuthorActivity) {
+    await postAuthorActivity.save();
+  }
+
+  await post.save();
+
+  res.status(200).json({
+    success: true,
+    message: `Post ${voteType}d successfully`,
+    data: {
+      upvoteCount: post.upvoteCount,
+      downvoteCount: post.downvoteCount,
+    },
+  });
+};
 
 // Bookmark a post
 const bookmarkPost = async (req: Request, res: Response) => {

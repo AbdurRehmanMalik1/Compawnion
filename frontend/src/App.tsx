@@ -24,6 +24,7 @@ import PetDetail from "./views/PetDetail";
 import VetAppointments from "./views/VetAppointments";
 import ShelterNavbar from "./components/navbar/ShelterNavbar";
 import axios from "axios";
+import ProfilePage from "./views/ProfilePage";
 
 axios.defaults.withCredentials = true;
 
@@ -109,6 +110,7 @@ const App = () => {
                 </PrivateRoute>
               }
             ></Route>
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
 
           <Route
