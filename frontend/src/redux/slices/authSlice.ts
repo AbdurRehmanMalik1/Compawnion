@@ -34,9 +34,11 @@ const initialState: UserState = {
 
 export const signupUser = createAsyncThunk(
     'auth/signupUser',
-    async (credentials: { name: string; email: string; password: string; avatar: string | undefined}, thunkAPI) => {
+    async (credentials: { name: string; email: string; password: string; avatar: string | undefined }, thunkAPI) => {
         try {
-            const response = await apiServerAuth.post('/signup', credentials);
+            const response = await apiServerAuth.post('/signup', credentials, {
+                withCredentials: true,  // Ensure credentials are sent with this request
+            });
             return response.data.user;
         } catch (error: any) {
             const data = getAxiosErrorData(error);
@@ -49,7 +51,9 @@ export const verifyOTP = createAsyncThunk(
     'auth/verifyOTP',
     async (otp: string, thunkAPI) => {
         try {
-            const response = await apiServerAuth.post('/verify', { otp });
+            const response = await apiServerAuth.post('/verify', { otp }, {
+                withCredentials: true,  // Ensure credentials are sent with this request
+            });
             return response.data.user;
         } catch (error: any) {
             const data = getAxiosErrorData(error);
@@ -62,7 +66,9 @@ export const resendOTP = createAsyncThunk(
     'auth/resendOTP',
     async (_, thunkAPI) => {
         try {
-            await apiServerAuth.post('/resend-verification');
+            await apiServerAuth.post('/resend-verification', {}, {
+                withCredentials: true,  // Ensure credentials are sent with this request
+            });
         } catch (error: any) {
             const data = getAxiosErrorData(error);
             return thunkAPI.rejectWithValue(data?.error?.message || 'Failed to resend OTP');
@@ -74,7 +80,9 @@ export const loginUser = createAsyncThunk(
     'auth/loginUser',
     async (credentials: { email: string; password: string }, thunkAPI) => {
         try {
-            const response = await apiServerAuth.post('/login', credentials);
+            const response = await apiServerAuth.post('/login', credentials, {
+                withCredentials: true,  // Ensure credentials are sent with this request
+            });
             return response.data.user;
         } catch (error: any) {
             const data = getAxiosErrorData(error);
@@ -83,11 +91,29 @@ export const loginUser = createAsyncThunk(
     }
 );
 
+export const autoLogin = createAsyncThunk(
+    'auth/autoLogin',
+    async (_, thunkAPI) => {
+        try {
+            const response = await apiServerAuth.get('/me', {
+                withCredentials: true,
+            });
+            return response.data.user;
+        } catch (error: any) {
+            const data = getAxiosErrorData(error);
+            return thunkAPI.rejectWithValue(data?.error?.message || 'Auto-login failed');
+        }
+    }
+);
+
+
 export const logoutUser = createAsyncThunk(
     'auth/logoutUser',
     async (_, thunkAPI) => {
         try {
-            await apiServerAuth.post('/logout');
+            await apiServerAuth.post('/logout', {}, {
+                withCredentials: true,  // Ensure credentials are sent with this request
+            });
         } catch (error: any) {
             const data = getAxiosErrorData(error);
             return thunkAPI.rejectWithValue(data?.error?.message || 'Logout failed');
@@ -99,7 +125,9 @@ export const registerUserRole = createAsyncThunk(
     'auth/registerUserRole',
     async ({ role, roleData }: { role: string; roleData: any }, thunkAPI) => {
         try {
-            const response = await apiServerAuth.post('/register-role', { role, roleData });
+            const response = await apiServerAuth.post('/register-role', { role, roleData }, {
+                withCredentials: true,  // Ensure credentials are sent with this request
+            });
             return response.data.user;
         } catch (error: any) {
             const data = getAxiosErrorData(error);
@@ -205,7 +233,23 @@ const authSlice = createSlice({
             // ─── Logout ───────────────────────────────────────────────────────────
             .addCase(logoutUser.fulfilled, (state) => {
                 Object.assign(state, initialState);
-            });
+            })
+            .addCase(autoLogin.pending, (state) => {
+                state.loading = true;
+                state.error = '';
+            })
+            .addCase(autoLogin.fulfilled, (state, action: PayloadAction<UserData>) => {
+                Object.assign(state, action.payload, {
+                    isAuthenticated: true,
+                    loading: false,
+                    error: '',
+                });
+            })
+            .addCase(autoLogin.rejected, (state, action) => {
+                state.loading = false;
+                state.isAuthenticated = false; // ensure logged out if session invalid
+                state.error = ''
+            })
     },
 });
 
