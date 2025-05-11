@@ -33,7 +33,7 @@ const App = () => {
     <>
       <Router>
         <Routes>
-          <Route path='/' element={<AppLayout />}>
+          <Route path="/" element={<AppLayout />}>
             <Route index element={<Home />} />
             <Route path='about' element={<AboutUs />} />
             <Route path='contact' element={<ContactUs />} />
@@ -45,11 +45,12 @@ const App = () => {
             <Route path='login' element={<PublicRoute><Login /></PublicRoute>} />
             <Route path='adopt' element={<PrivateRoute><Adopt /></PrivateRoute>}></Route>
           </Route>
-          <Route path='error404' element={<div>Error 404 Page Not Found</div>} />
-          <Route path='*' element={<div>Error 404 Page Not Found</div>} />
+          <Route path="error404" element={<div>Error 404 Page Not Found</div>} />
+          <Route path="*" element={<div>Error 404 Page Not Found</div>} />
         </Routes>
       </Router>
     </>
-  )
-}
-export default App
+  );
+};
+
+export default App;
