@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-
+import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';  
 type Category = 'Nutrition' | 'Training' | 'Health';
 
 type Reply = {
@@ -8,6 +8,9 @@ type Reply = {
   author: string;
   content: string;
   timestamp: string;
+  upvotes: number;
+  downvotes: number;
+  reported: boolean;
 };
 
 type ForumPost = {
@@ -18,6 +21,9 @@ type ForumPost = {
   content: string;
   timestamp: string;
   replies: Reply[];
+  upvotes: number;
+  downvotes: number;
+  reported: boolean;
 };
 
 const getCurrentTime = () => {
@@ -41,12 +47,18 @@ const Forum: React.FC = () => {
       author: 'PetLover99',
       content: 'What do you all feed your puppies? Looking for healthy options.',
       timestamp: '9:00 AM',
+      upvotes: 0,
+      downvotes: 0,
+      reported: false,
       replies: [
         {
           id: 1,
           author: 'HealthyPaws',
           content: 'I recommend grain-free dry food with salmon!',
           timestamp: '9:15 AM',
+          upvotes: 0,
+          downvotes: 0,
+          reported: false,
         },
       ],
     },
@@ -57,12 +69,18 @@ const Forum: React.FC = () => {
       author: 'DogTrainer21',
       content: 'My dog constantly pulls on the leash. Any effective tips?',
       timestamp: '10:30 AM',
+      upvotes: 0,
+      downvotes: 0,
+      reported: false,
       replies: [
         {
           id: 2,
           author: 'ObedientPets',
           content: 'Try the “stop and wait” method – worked wonders for me!',
           timestamp: '10:45 AM',
+          upvotes: 0,
+          downvotes: 0,
+          reported: false,
         },
       ],
     },
@@ -73,12 +91,18 @@ const Forum: React.FC = () => {
       author: 'CatMommy',
       content: 'Can someone share a basic vaccination schedule for new kittens?',
       timestamp: '11:00 AM',
+      upvotes: 0,
+      downvotes: 0,
+      reported: false,
       replies: [
         {
           id: 3,
           author: 'VetExpert',
           content: 'Core vaccines start at 6–8 weeks and continue every 3–4 weeks.',
           timestamp: '11:10 AM',
+          upvotes: 0,
+          downvotes: 0,
+          reported: false,
         },
       ],
     },
@@ -89,6 +113,9 @@ const Forum: React.FC = () => {
       author: 'WoofyWalker',
       content: 'My dog scratches all the time. Could it be food or pollen allergies?',
       timestamp: '11:30 AM',
+      upvotes: 0,
+      downvotes: 0,
+      reported: false,
       replies: [],
     },
   ]);
@@ -116,6 +143,9 @@ const Forum: React.FC = () => {
       category: newPost.category,
       author: 'You',
       timestamp: getCurrentTime(),
+      upvotes: 0,
+      downvotes: 0,
+      reported: false,
       replies: [],
     };
 
@@ -133,6 +163,9 @@ const Forum: React.FC = () => {
       author: 'You',
       content: replyText,
       timestamp: getCurrentTime(),
+      upvotes: 0,
+      downvotes: 0,
+      reported: false,
     };
 
     setPosts((prev) =>
@@ -144,6 +177,76 @@ const Forum: React.FC = () => {
     setReplyInputs((prev) => ({ ...prev, [postId]: '' }));
   };
 
+  // Handling Upvote, Downvote, and Report
+  const handleUpvotePost = (postId: number) => {
+    setPosts(prev =>
+      prev.map(post =>
+        post.id === postId ? { ...post, upvotes: post.upvotes + 1 } : post
+      )
+    );
+  };
+
+  const handleDownvotePost = (postId: number) => {
+    setPosts(prev =>
+      prev.map(post =>
+        post.id === postId ? { ...post, downvotes: post.downvotes + 1 } : post
+      )
+    );
+  };
+
+  const handleReportPost = (postId: number) => {
+    setPosts(prev =>
+      prev.map(post =>
+        post.id === postId ? { ...post, reported: true } : post
+      )
+    );
+  };
+
+  const handleUpvoteReply = (postId: number, replyId: number) => {
+    setPosts(prev =>
+      prev.map(post =>
+        post.id === postId
+          ? {
+              ...post,
+              replies: post.replies.map(reply =>
+                reply.id === replyId ? { ...reply, upvotes: reply.upvotes + 1 } : reply
+              ),
+            }
+          : post
+      )
+    );
+  };
+
+  const handleDownvoteReply = (postId: number, replyId: number) => {
+    setPosts(prev =>
+      prev.map(post =>
+        post.id === postId
+          ? {
+              ...post,
+              replies: post.replies.map(reply =>
+                reply.id === replyId ? { ...reply, downvotes: reply.downvotes + 1 } : reply
+              ),
+            }
+          : post
+      )
+    );
+  };
+
+  const handleReportReply = (postId: number, replyId: number) => {
+    setPosts(prev =>
+      prev.map(post =>
+        post.id === postId
+          ? {
+              ...post,
+              replies: post.replies.map(reply =>
+                reply.id === replyId ? { ...reply, reported: true } : reply
+              ),
+            }
+          : post
+      )
+    );
+  };
+
   const filteredPosts =
     categoryFilter === 'All'
       ? posts
@@ -152,7 +255,7 @@ const Forum: React.FC = () => {
   const searchedPosts = filteredPosts.filter((post) => {
     const query = searchQuery.toLowerCase();
     return (
-      post.title.toLowerCase().includes(query) 
+      post.title.toLowerCase().includes(query)
     );
   });
 
@@ -275,52 +378,69 @@ const Forum: React.FC = () => {
             </div>
             <h3 className="text-lg font-bold mt-1 text-[var(--color-primary)]">{post.title}</h3>
             <p className="text-sm text-gray-700 mt-1">{post.content}</p>
-            <div className="text-xs text-gray-500 mt-1">By {post.author}</div>
+            <div className="text-xs text-gray-500 mt-2">{`By ${post.author}`}</div>
 
-            {/* Replies */}
-            {post.replies.length > 0 && (
-              <div className="mt-3 space-y-2">
-                {post.replies.map((reply) => (
-                  <div
-                    key={reply.id}
-                    className="ml-4 p-2 border border-gray-100 rounded-xl bg-gray-50"
-                  >
-                    <div className="text-sm text-gray-700">
-                      <strong>{reply.author}:</strong> {reply.content}
-                    </div>
-                    <div className="text-xs text-gray-400">{reply.timestamp}</div>
+            {/* Post Vote and Report */}
+            <div className="flex items-center gap-4 text-sm mt-2">
+              <button onClick={() => handleUpvotePost(post.id)} className="flex items-center gap-1 hover:opacity-70">
+                <FaThumbsUp />
+                {post.upvotes}
+              </button>
+              <button onClick={() => handleDownvotePost(post.id)} className="flex items-center gap-1 hover:opacity-70">
+                <FaThumbsDown />
+                {post.downvotes}
+              </button>
+              <button
+                onClick={() => handleReportPost(post.id)}
+                disabled={post.reported}
+                className={`flex items-center gap-1 hover:opacity-70 ${post.reported ? 'text-red-500' : ''}`}
+              >
+                {post.reported ? 'Reported' : '⚠ Report'}
+              </button>
+            </div>
+
+            {/* Post Replies */}
+            <div className="mt-4">
+              {post.replies.map((reply) => (
+                <div key={reply.id} className="bg-gray-50 p-3 rounded-lg shadow-md mb-4">  {/* Added mb-4 for spacing between replies */}
+                  <div className="text-[var(--color-secondary)] text-xs">{reply.timestamp}</div>
+                  <div className="font-semibold">{reply.author}</div>
+                  <p className="text-sm text-gray-700">{reply.content}</p>
+                  <div className="flex items-center gap-2 text-xs mt-1 ml-2">
+                    <button onClick={() => handleUpvoteReply(post.id, reply.id)} className="flex items-center gap-1 hover:opacity-70">
+                      <FaThumbsUp />
+                      {reply.upvotes}
+                    </button>
+                    <button onClick={() => handleDownvoteReply(post.id, reply.id)} className="flex items-center gap-1 hover:opacity-70">
+                      <FaThumbsDown />
+                      {reply.downvotes}
+                    </button>
+                    <button
+                      onClick={() => handleReportReply(post.id, reply.id)}
+                      disabled={reply.reported}
+                      className={`hover:opacity-70 ${reply.reported ? 'text-red-500' : ''}`}
+                    >
+                      {reply.reported ? 'Reported' : '⚠ Report'}
+                    </button>
                   </div>
-                ))}
-              </div>
-            )}
+                </div>
+              ))}
 
-            {/* Reply Input */}
-            <div className="mt-3 flex items-center gap-2 ml-4">
-              <input
-                type="text"
-                placeholder="Write a reply..."
-                className="flex-1 border border-gray-300 rounded-full px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
-                value={replyInputs[post.id] || ''}
-                onChange={(e) =>
-                  setReplyInputs((prev) => ({ ...prev, [post.id]: e.target.value }))
-                }
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleReplySubmit(post.id);
-                }}
-              />
-              <button
-                className="text-xl text-gray-500 hover:text-gray-700"
-                onClick={handleAttachFile}
-                title="Attach file"
-              >
-                ➕
-              </button>
-              <button
-                className="text-sm bg-[var(--color-secondary)] text-white px-3 py-1 rounded-full hover:opacity-90 transition"
-                onClick={() => handleReplySubmit(post.id)}
-              >
-                Reply
-              </button>
+              <div className="mt-4 flex items-center space-x-2">
+                <textarea
+                  placeholder="Write a reply..."
+                   rows={1}
+                  value={replyInputs[post.id] || ''}
+                  onChange={(e) => setReplyInputs({ ...replyInputs, [post.id]: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                />
+                <button
+                  onClick={() => handleReplySubmit(post.id)}
+                  className="bg-[var(--color-primary)] text-white px-4 py-2 rounded-full hover:opacity-90 text-sm"
+                >
+                  Reply
+                </button>
+              </div>
             </div>
           </div>
         ))}
