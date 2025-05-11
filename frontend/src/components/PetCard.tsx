@@ -1,25 +1,44 @@
-import clsx from "clsx";
+import { Pet } from "../api/pet.api";
+import { Link } from "react-router-dom";
 
 interface PetCardProps {
-    name: string;
-    description: string;
-    imageUrl: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  pet: Pet;
 }
 
-const PetCard: React.FC<PetCardProps> = ({ name, description, imageUrl }) => {
-    return (
-        <div className={
-            clsx("cursor-pointer gap-y-2 bg-white border border-[rgba(0,0,0,0.17)] rounded-lg py-0 box-border flex flex-col items-start",
-                "hover:shadow-lg hover:translate-y-1 transition-transform duration-100"
-            )
-        }>
-            <img className="w-[100%] rounded-tl-inherit" src={imageUrl} alt={name} />
-            <div className="pl-2 pb-4">
-                <h2 className="text-[var(--color-primary)] text-3xl">{name}</h2>
-                <p>{description}</p>
-            </div>
+const PetCard = ({ name, description, imageUrl, pet }: PetCardProps) => {
+  return (
+    <Link to={`/pet/${pet._id}`} className="no-underline text-black">
+      <div className="flex flex-col w-full h-[460px] rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] bg-white">
+        <div className="h-64 w-full">
+          <img
+            src={imageUrl}
+            alt={name}
+            className="w-full h-full object-cover"
+          />
         </div>
-    );
+        <div className="p-6 flex flex-col gap-3">
+          <h2 className="text-2xl font-bold">{name}</h2>
+          <p className="text-gray-600 line-clamp-2 text-base">{description}</p>
+          <div className="flex flex-wrap gap-2 mt-auto">
+            <span className="px-3 py-1.5 bg-gray-100 rounded-full text-sm font-medium">
+              {pet.species}
+            </span>
+            <span className="px-3 py-1.5 bg-gray-100 rounded-full text-sm font-medium">
+              {pet.gender}
+            </span>
+            {pet.breed && (
+              <span className="px-3 py-1.5 bg-gray-100 rounded-full text-sm font-medium">
+                {pet.breed}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
 };
 
 export default PetCard;
