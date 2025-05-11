@@ -5,6 +5,9 @@ import AddressForm from "../components/signupdetails/AddressForm";
 import ShelterForm from "../components/signupdetails/ShelterForm";
 import VeterinarianForm from "../components/signupdetails/VeterinarianForm";
 import clsx from "clsx";
+import { registerUserRole } from "../redux/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { useNavigate } from "react-router";
 
 const getInitialFormData = (role: string) => {
     const base = {
@@ -34,7 +37,11 @@ const getInitialFormData = (role: string) => {
             shelterName: "",
             description: "",
             logo: "",
-            adoptionPolicy: ""
+            adoptionPolicy: "",
+            location: {
+                type: "Point",
+                coordinates: [-73.935242, 40.73061]
+            },
         };
     }
     // Adopter only needs base fields
@@ -68,6 +75,10 @@ const SignUpDetails: React.FC = () => {
         education: [{ degree: "", institution: "", year: "" }],
 
         // Shelter-specific
+        location: {
+            type: "Point",
+            coordinates: [-73.935242, 40.73061]
+        },
         shelterName: "",
         description: "",
         logo: "",
@@ -168,13 +179,14 @@ const SignUpDetails: React.FC = () => {
 
 
     const formSteps = getSteps();
+    const dispatch = useAppDispatch();
 
     const submitSignUpDetailsForm = (e: React.FormEvent) => {
         e.preventDefault();
         const newErrors: any = {};
         setShowErrors(true);
 
-        // Validate veterinarian-specific fields
+        // Validate role-specific fields
         if (formData.role === "Veterinarian") {
             formData.education.forEach((entry: any, index: number) => {
                 if (!entry.degree.trim()) newErrors[`degree-${index}`] = "Please fill the necessary fields.";
@@ -186,10 +198,10 @@ const SignUpDetails: React.FC = () => {
                 newErrors.experience = "Experience is required.";
             }
         }
+
         if (formData.role === "Shelter") {
             if (!formData.shelterName.trim()) newErrors.shelterName = "Shelter name is required.";
         }
-
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
@@ -197,10 +209,65 @@ const SignUpDetails: React.FC = () => {
         }
 
         setErrors({});
-        console.log("Submitted Form", formData);
-        // submit logic
-    };
 
+        // Structure the payload
+        const commonData = {
+            profilePic: formData.profilePic,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            phone: formData.phone,
+            address: {
+                street: formData.street,
+                city: formData.city,
+                state: formData.state,
+                zip: formData.zip,
+                country: formData.country
+            }
+        };
+
+        let roleData: any = {};
+
+        if (formData.role === "Veterinarian") {
+            roleData = {
+                clinicName: formData.clinicName,
+                specialization: formData.specialization,
+                experience: formData.experience,
+                education: formData.education
+            };
+        } else if (formData.role === "Shelter") {
+            roleData = {
+                shelterName: formData.shelterName,
+                description: formData.description,
+                logo: formData.logo,
+                coverImage: formData.coverImage,
+                adoptionPolicy: formData.adoptionPolicy,
+                address: `${formData.street}`,
+                location: {
+                    type: "Point",
+                    coordinates: [
+                        -73.935242,
+                        40.73061
+                    ]
+                },
+            };
+        }
+        console.log(formData.role.toLowerCase());
+        const payload = {
+            ...commonData,
+            // address:`${formData.street}`,
+            role: formData.role.toLowerCase(),
+            roleData
+        };
+
+        console.log("Submitted Payload:", payload);
+        dispatch(registerUserRole(payload));
+    };
+    const navigate = useNavigate();
+    const {role} = useAppSelector(state=>state.auth);
+    useEffect(()=>{
+        if(role)
+            navigate('/adopt');
+    },[navigate , role])
     return (
         <div
             className="min-h-screen px-4 bg-cover bg-center flex items-center justify-center transition-all duration-1000"
