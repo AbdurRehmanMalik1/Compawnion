@@ -27,6 +27,7 @@ const initialState: UserState = {
     isAuthenticated: false,
     loading: false,
     error: '',
+    
 };
 
 // ───────────────────────────────────────────────────────────────────────────────
