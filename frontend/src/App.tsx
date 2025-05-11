@@ -12,6 +12,8 @@ import AboutUs from './views/About';
 import ContactUs from './views/Contact';
 import SignUpDetails from './views/SignUpDetails';
 import PublicRoute from './components/PublicRoute';
+import Forum from './views/CommunityForum';
+import ChatList from './views/ChatPage';
 
 
 
@@ -38,6 +40,8 @@ const App = () => {
             <Route path='about' element={<AboutUs />} />
             <Route path='contact' element={<ContactUs />} />
             <Route path='signup-details' element={<SignUpDetails />} />
+            <Route path='forum' element={<Forum />} />
+            <Route path='chats' element={<ChatList />} />
             <Route path='signup' element={<PublicRoute><Outlet /></PublicRoute>} >
               <Route index element={<PublicRoute><Signup /></PublicRoute>} />
               <Route path='verifyCode' element={<PrivateRoute><VerifyCode /></PrivateRoute>} />
