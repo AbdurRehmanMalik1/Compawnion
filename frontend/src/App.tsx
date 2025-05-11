@@ -22,6 +22,7 @@ import AdopterNavbar from './components/navbar/AdopterNavbar';
 import LogoutPage from './views/Logout';
 import PetDetail from './views/PetDetail';
 import VetAppointments from './views/VetAppointments';
+import ShelterNavbar from './components/navbar/ShelterNavbar';
 
 
 
@@ -38,7 +39,9 @@ const AppLayout = () => {
   console.log(name)
   return (
     <div className="flex flex-col h-full flex-grow">
-      {!isAuthenticated ? <Navbar /> : !role || role.toLowerCase() === 'adopter'.toLowerCase() ? <AdopterNavbar /> : null}
+      {!isAuthenticated ? <Navbar /> : 
+      !role || role.toLowerCase() === 'adopter'.toLowerCase() ? <AdopterNavbar />  : 
+      !role || role.toLowerCase() === 'shelter'.toLowerCase() ?<ShelterNavbar/> : null}
       {/* <Navbar /> */}
       <Outlet />
     </div>
