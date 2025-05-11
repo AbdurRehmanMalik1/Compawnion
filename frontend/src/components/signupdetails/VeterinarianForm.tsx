@@ -13,7 +13,7 @@ interface VeterinarianFormProps {
         education: EducationEntry[];
     };
     errors: { [key: string]: string };
-    showErrors: boolean; // ✅ Add this line
+    showErrors: boolean;
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleEducationChange: (index: number, e: React.ChangeEvent<HTMLInputElement>) => void;
     addEducation: () => void;

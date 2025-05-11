@@ -2,8 +2,44 @@ import React, { useState, useEffect } from "react";
 import RoleForm from "../components/signupdetails/RoleForm";
 import ProfileForm from "../components/signupdetails/ProfileForm";
 import AddressForm from "../components/signupdetails/AddressForm";
+import ShelterForm from "../components/signupdetails/ShelterForm";
 import VeterinarianForm from "../components/signupdetails/VeterinarianForm";
 import clsx from "clsx";
+
+const getInitialFormData = (role: string) => {
+    const base = {
+        role,
+        profilePic: null,
+        firstName: "",
+        lastName: "",
+        phone: "",
+        street: "",
+        city: "",
+        state: "",
+        zip: "",
+        country: ""
+    };
+
+    if (role === "Veterinarian") {
+        return {
+            ...base,
+            clinicName: "",
+            specialization: "",
+            experience: "",
+            education: [{ degree: "", institution: "", year: "" }]
+        };
+    } else if (role === "Shelter") {
+        return {
+            ...base,
+            shelterName: "",
+            description: "",
+            logo: "",
+            adoptionPolicy: ""
+        };
+    }
+    // Adopter only needs base fields
+    return base;
+};
 
 const SignUpDetails: React.FC = () => {
     const [step, setStep] = useState(0);
@@ -24,11 +60,21 @@ const SignUpDetails: React.FC = () => {
         state: "",
         zip: "",
         country: "",
+
+        // Veterinarian-specific
         clinicName: "",
         specialization: "",
         experience: "",
-        education: [{ degree: "", institution: "", year: "" }]
+        education: [{ degree: "", institution: "", year: "" }],
+
+        // Shelter-specific
+        shelterName: "",
+        description: "",
+        logo: "",
+        coverImage: "",
+        adoptionPolicy: ""
     });
+
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -37,13 +83,24 @@ const SignUpDetails: React.FC = () => {
         return () => clearInterval(interval);
     }, []);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, files } = e.target;
-        setFormData((prev: any) => ({
-            ...prev,
-            [name]: files ? files[0] : value
-        }));
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+        const { name, value, files } = e.target as HTMLInputElement;
+
+        if (name === "role") {
+            setFormData(getInitialFormData(value));
+            setStep(1); // jump to next step after selecting role
+            setErrors({});
+            setShowErrors(false);
+        } else {
+            setFormData((prev: any) => ({
+                ...prev,
+                [name]: files ? files[0] : value
+            }));
+        }
     };
+
 
     const handleEducationChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
         const newEducation = [...formData.education];
@@ -72,11 +129,22 @@ const SignUpDetails: React.FC = () => {
     const getSteps = () => {
         switch (formData.role) {
             case "Adopter":
-            case "Shelter":
                 return [
                     <RoleForm formData={formData} handleChange={handleChange} />,
                     <ProfileForm formData={formData} handleChange={handleChange} />,
                     <AddressForm formData={formData} handleChange={handleChange} />
+                ];
+            case "Shelter":
+                return [
+                    <RoleForm formData={formData} handleChange={handleChange} />,
+                    <ProfileForm formData={formData} handleChange={handleChange} />,
+                    <AddressForm formData={formData} handleChange={handleChange} />,
+                    <ShelterForm
+                        formData={formData}
+                        handleChange={handleChange}
+                        errors={errors}
+                        showErrors={showErrors}
+                    />
                 ];
             case "Veterinarian":
                 return [
@@ -98,12 +166,13 @@ const SignUpDetails: React.FC = () => {
         }
     };
 
+
     const formSteps = getSteps();
 
     const submitSignUpDetailsForm = (e: React.FormEvent) => {
         e.preventDefault();
         const newErrors: any = {};
-        setShowErrors(true); // ✅ So errors show now
+        setShowErrors(true);
 
         // Validate veterinarian-specific fields
         if (formData.role === "Veterinarian") {
@@ -117,6 +186,10 @@ const SignUpDetails: React.FC = () => {
                 newErrors.experience = "Experience is required.";
             }
         }
+        if (formData.role === "Shelter") {
+            if (!formData.shelterName.trim()) newErrors.shelterName = "Shelter name is required.";
+        }
+
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
@@ -149,7 +222,7 @@ const SignUpDetails: React.FC = () => {
                     >
                         Back
                     </button>
-                    {step!=0 && step === formSteps.length - 1 ? (
+                    {step !== 0 && step === formSteps.length - 1 ? (
                         <button
                             type="submit"
                             className="bg-[var(--color-primary)] text-white px-4 py-2 rounded hover:opacity-80"
