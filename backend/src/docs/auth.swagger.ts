@@ -231,35 +231,55 @@
  *               roleData:
  *                 type: object
  *                 description: Data specific to the role
- *                 properties:
- *                   shelterName:
- *                     type: string
- *                     description: Name of the shelter (required for SHELTER role)
- *                   address:
- *                     type: string
- *                     description: Address of the shelter (required for SHELTER role)
+ *           examples:
+ *             shelter:
+ *               summary: Example for shelter role
+ *               value:
+ *                 role: shelter
+ *                 roleData:
+ *                   shelterName: Happy Paws Rescue
+ *                   address: 123 Rescue Lane, New York, NY 10001
  *                   location:
- *                     type: object
- *                     description: Location coordinates (required for SHELTER role)
- *                     properties:
- *                       type:
- *                         type: string
- *                         enum: [Point]
- *                         description: Type of the location (always Point)
- *                       coordinates:
- *                         type: array
- *                         items:
- *                           type: number
- *                         minItems: 2
- *                         maxItems: 2
- *                         description: Array of [longitude, latitude] coordinates
- *                         example: [-73.935242, 40.730610]
- *                   phone:
- *                     type: string
- *                     description: Contact phone number (optional)
- *                   description:
- *                     type: string
- *                     description: Description of the shelter (optional)
+ *                     type: Point
+ *                     coordinates: [-73.935242, 40.730610]
+ *                   phone: "2125551234"
+ *                   description: A non-profit animal shelter dedicated to finding forever homes for dogs and cats.
+ *             veterinarian:
+ *               summary: Example for veterinarian role
+ *               value:
+ *                 role: veterinarian
+ *                 roleData:
+ *                   clinicName: Healthy Pets Clinic
+ *                   specialization: ["Small Animals", "Surgery", "Dermatology"]
+ *                   qualifications: ["DVM", "Certified Veterinary Surgeon"]
+ *                   experience: 8
+ *                   address: 456 Vet Avenue, New York, NY 10002
+ *                   location:
+ *                     type: Point
+ *                     coordinates: [-73.956789, 40.741234]
+ *                   phone: "2125555678"
+ *                   bio: "Experienced veterinarian specializing in small animal care with over 8 years of practice."
+ *                   consultationFee: 75
+ *                   availability: [
+ *                     {
+ *                       day: "monday",
+ *                       startTime: "09:00",
+ *                       endTime: "17:00",
+ *                       isAvailable: true
+ *                     },
+ *                     {
+ *                       day: "wednesday",
+ *                       startTime: "09:00",
+ *                       endTime: "17:00",
+ *                       isAvailable: true
+ *                     },
+ *                     {
+ *                       day: "friday",
+ *                       startTime: "10:00",
+ *                       endTime: "15:00",
+ *                       isAvailable: true
+ *                     }
+ *                   ]
  *     responses:
  *       200:
  *         description: Role registered successfully
@@ -290,4 +310,75 @@
  *                     roleData:
  *                       type: object
  *                       nullable: true
+ *             examples:
+ *               shelter:
+ *                 summary: Response for shelter role registration
+ *                 value:
+ *                   message: Role registered successfully
+ *                   user:
+ *                     _id: "60d21b4667d0d8992e610c85"
+ *                     name: "John Doe"
+ *                     email: "john@example.com"
+ *                     avatar: "https://example.com/avatar.jpg"
+ *                     isVerified: true
+ *                     role: "SHELTER"
+ *                     roleData:
+ *                       shelterName: "Happy Paws Rescue"
+ *                       address: "123 Rescue Lane, New York, NY 10001"
+ *                       location:
+ *                         type: "Point"
+ *                         coordinates: [-73.935242, 40.730610]
+ *                       phone: "2125551234"
+ *                       description: "A non-profit animal shelter dedicated to finding forever homes for dogs and cats."
+ *               veterinarian:
+ *                 summary: Response for veterinarian role registration
+ *                 value:
+ *                   message: Role registered successfully
+ *                   user:
+ *                     _id: "60d21b4667d0d8992e610c86"
+ *                     name: "Jane Smith"
+ *                     email: "jane@example.com"
+ *                     avatar: "https://example.com/avatar2.jpg"
+ *                     isVerified: true
+ *                     role: "VETERINARIAN"
+ *                     roleData:
+ *                       clinicName: "Healthy Pets Clinic"
+ *                       specialization: ["Small Animals", "Surgery", "Dermatology"]
+ *                       qualifications: ["DVM", "Certified Veterinary Surgeon"]
+ *                       experience: 8
+ *                       address: "456 Vet Avenue, New York, NY 10002"
+ *                       location:
+ *                         type: "Point"
+ *                         coordinates: [-73.956789, 40.741234]
+ *                       phone: "2125555678"
+ *                       bio: "Experienced veterinarian specializing in small animal care with over 8 years of practice."
+ *                       consultationFee: 75
+ *                       averageRating: 4.8
+ *                       totalReviews: 24
+ *                       availability: [
+ *                         {
+ *                           day: "monday",
+ *                           startTime: "09:00",
+ *                           endTime: "17:00",
+ *                           isAvailable: true
+ *                         },
+ *                         {
+ *                           day: "wednesday",
+ *                           startTime: "09:00",
+ *                           endTime: "17:00",
+ *                           isAvailable: true
+ *                         },
+ *                         {
+ *                           day: "friday",
+ *                           startTime: "10:00",
+ *                           endTime: "15:00",
+ *                           isAvailable: true
+ *                         }
+ *                       ]
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
  */

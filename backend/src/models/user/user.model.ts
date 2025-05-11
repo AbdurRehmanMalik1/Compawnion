@@ -1,11 +1,11 @@
-import mongoose, { Document } from "mongoose";
-import { UserRole } from "../../types";
-import { ShelterData, shelterDataSchema } from "./shelter.data";
-import { AdopterData, adopterDataSchema } from "./adopter.data";
-import { VetData, vetDataSchema } from "./vet.data";
 import bcrypt from "bcrypt";
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
+import mongoose, { Document } from "mongoose";
 import { config } from "../../config";
+import { UserRole } from "../../types";
+import { AdopterData } from "./adopter.data";
+import { ShelterData } from "./shelter.data";
+import { VetData } from "./vet.data";
 
 export interface UserModelI extends Document {
   _id: string;
@@ -58,12 +58,12 @@ const userSchema = new mongoose.Schema({
           return value && value.shelterName && value.address && value.location;
         }
         if (this.role === UserRole.ADOPTER) {
-          return false;
+          return true;
         }
         if (this.role === UserRole.VETERINARIAN) {
-          return false;
+          return true;
         }
-        return true;
+        return false;
       },
       message: "roleData must be provided when role is set",
     },
