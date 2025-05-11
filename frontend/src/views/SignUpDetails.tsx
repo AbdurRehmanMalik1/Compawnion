@@ -149,7 +149,7 @@ const SignUpDetails: React.FC = () => {
                     >
                         Back
                     </button>
-                    {step === formSteps.length - 1 ? (
+                    {step!=0 && step === formSteps.length - 1 ? (
                         <button
                             type="submit"
                             className="bg-[var(--color-primary)] text-white px-4 py-2 rounded hover:opacity-80"

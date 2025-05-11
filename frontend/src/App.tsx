@@ -20,6 +20,8 @@ import { useEffect } from 'react';
 import { autoLogin } from './redux/slices/authSlice';
 import AdopterNavbar from './components/navbar/AdopterNavbar';
 import LogoutPage from './views/Logout';
+import PetDetail from './views/PetDetail';
+import VetAppointments from './views/VetAppointments';
 
 
 
@@ -57,6 +59,8 @@ const App = () => {
             <Route path='chats' element={<ChatList />} />
             <Route path='livestream' element={<LiveStreamPage />} />
             <Route path='add-pet' element={<PetForm />} />
+            <Route path="/petdetail" element={<PetDetail />} />
+            <Route path="/vetappointment" element={<VetAppointments />} />
             <Route path='logout' element={<PrivateRoute><LogoutPage /></PrivateRoute>} />
             <Route path='signup' element={<PublicRoute><Outlet /></PublicRoute>} >
               <Route index element={<PublicRoute><Signup /></PublicRoute>} />
@@ -65,6 +69,7 @@ const App = () => {
             <Route path='login' element={<PublicRoute><Login /></PublicRoute>} />
             <Route path='adopt' element={<PrivateRoute><Adopt /></PrivateRoute>}></Route>
           </Route>
+
           <Route path="error404" element={<div>Error 404 Page Not Found</div>} />
           <Route path="*" element={<div>Error 404 Page Not Found</div>} />
         </Routes>
