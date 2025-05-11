@@ -14,6 +14,7 @@ import SignUpDetails from './views/SignUpDetails';
 import PublicRoute from './components/PublicRoute';
 import Forum from './views/CommunityForum';
 import ChatList from './views/ChatPage';
+import LiveStreamPage from './views/LiveStream';
 
 
 
@@ -42,6 +43,7 @@ const App = () => {
             <Route path='signup-details' element={<SignUpDetails />} />
             <Route path='forum' element={<Forum />} />
             <Route path='chats' element={<ChatList />} />
+            <Route path='livestream' element={<LiveStreamPage/>}/>
             <Route path='signup' element={<PublicRoute><Outlet /></PublicRoute>} >
               <Route index element={<PublicRoute><Signup /></PublicRoute>} />
               <Route path='verifyCode' element={<PrivateRoute><VerifyCode /></PrivateRoute>} />

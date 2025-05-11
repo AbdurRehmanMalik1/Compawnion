@@ -58,7 +58,6 @@ const AddressForm: React.FC<AddressFormProps> = ({ formData, handleChange }) => 
         className="p-2 border rounded w-full"
       />
     </div>
-
   </div>
 );
 
