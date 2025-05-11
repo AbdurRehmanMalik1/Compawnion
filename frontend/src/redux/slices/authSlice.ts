@@ -245,7 +245,7 @@ const authSlice = createSlice({
                     error: '',
                 });
             })
-            .addCase(autoLogin.rejected, (state, action) => {
+            .addCase(autoLogin.rejected, (state) => {
                 state.loading = false;
                 state.isAuthenticated = false; // ensure logged out if session invalid
                 state.error = ''
