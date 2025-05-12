@@ -1,15 +1,16 @@
 import axios from "axios";
+import config from "./config";
 
 export const apiServer = axios.create({
-    baseURL: 'http://localhost:8000/api',
-    headers: {
-        'Content-Type': 'application/json',
-    }
+  baseURL: `${config.apiServer}/api`,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 export const apiServerAuth = axios.create({
-    baseURL: 'http://localhost:8000/api/auth',
-    headers: {
-        'Content-Type': 'application/json',
-    }
+  baseURL: `${config.apiServer}/api/auth`,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });

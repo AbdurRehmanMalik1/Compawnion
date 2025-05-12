@@ -23,4 +23,6 @@ router.get(
 
 router.get("/search", petController.searchPets);
 
+router.get("/:id", authMiddleware, petController.getPetById);
+
 export default router;

@@ -159,7 +159,7 @@ const login = async (req: Request, res: Response) => {
 
 const logout = async (req: Request, res: Response) => {
   // Clear the token cookie
-  res.clearCookie("token", getCookieOptions());
+  res.cookie("token", "", getCookieOptions());
 
   res.status(200).json({
     message: "Logged out successfully",
@@ -193,7 +193,6 @@ const registerRole = async (req: Request, res: Response) => {
     message: "Role registered successfully",
     user: userWithoutSensitive,
   });
-
 };
 
 const autoLogin = async (req: Request, res: Response) => {
@@ -211,20 +210,18 @@ const autoLogin = async (req: Request, res: Response) => {
   const userObj = user.toObject();
   const { password: _, ...userWithoutSensitive } = userObj;
 
-  console.log(userObj);
-
   res.status(200).json({
     message: "Auto-login successful",
     user: userWithoutSensitive,
   });
-}
-  
-  export const authController = {
-    signup,
-    verifyOTP,
-    resendVerification,
-    login,
-    autoLogin,
-    logout,
-    registerRole,
-  };
+};
+
+export const authController = {
+  signup,
+  verifyOTP,
+  resendVerification,
+  login,
+  autoLogin,
+  logout,
+  registerRole,
+};

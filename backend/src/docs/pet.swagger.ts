@@ -373,3 +373,56 @@
  *                                   phone:
  *                                     type: string
  */
+
+/**
+ * @swagger
+ * /api/pets/{id}:
+ *   get:
+ *     tags:
+ *       - Pets
+ *     summary: Get a single pet by ID
+ *     description: Retrieve detailed information about a specific pet
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the pet to retrieve
+ *     responses:
+ *       200:
+ *         description: Pet retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Pet retrieved successfully
+ *                 pet:
+ *                   allOf:
+ *                     - $ref: '#/components/schemas/Pet'
+ *                     - type: object
+ *                       properties:
+ *                         shelterId:
+ *                           type: object
+ *                           properties:
+ *                             _id:
+ *                               type: string
+ *                             name:
+ *                               type: string
+ *                             email:
+ *                               type: string
+ *                             roleData:
+ *                               type: object
+ *                               properties:
+ *                                 shelterName:
+ *                                   type: string
+ *                                 address:
+ *                                   type: string
+ *                                 phone:
+ *                                   type: string
+ */

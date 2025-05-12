@@ -57,7 +57,13 @@ const userSchema = new mongoose.Schema({
         if (this.role === UserRole.SHELTER) {
           return value && value.shelterName && value.address && value.location;
         }
-        return value && Object.keys(value).length > 0;
+        if (this.role === UserRole.ADOPTER) {
+          return false;
+        }
+        if (this.role === UserRole.VETERINARIAN) {
+          return false;
+        }
+        return true;
       },
       message: "roleData must be provided when role is set",
     },

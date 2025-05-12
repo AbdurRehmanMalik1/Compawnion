@@ -238,8 +238,30 @@ const searchPets = async (req: Request, res: Response) => {
   });
 };
 
+const getPetById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const pet = await PetModel.findById(id)
+    .populate({
+      path: "shelterId",
+      select: "name email roleData",
+      match: { role: UserRole.SHELTER },
+    })
+    .lean();
+
+  if (!pet) {
+    throw HttpExceptions.NotFound("Pet not found");
+  }
+
+  res.status(200).json({
+    message: "Pet retrieved successfully",
+    pet,
+  });
+};
+
 export const petController = {
   addPet,
   getShelterPets,
   searchPets,
+  getPetById,
 };

@@ -47,6 +47,7 @@ const ProxyAuthenticationRequired = formatError(
 );
 const RequestTimeout = formatError(408, "Request Timeout");
 const Conflict = formatError(409, "Conflict");
+const InternalServerError = formatError(500, "Internal Server Error");
 const CustomError = (statusCode: number, message: string) =>
   formatError(statusCode, message);
 
@@ -55,9 +56,18 @@ const CustomError = (statusCode: number, message: string) =>
  */
 const ExceptionHandler = () => {
   return (err: any, req: Request, res: Response, next: NextFunction): any => {
+    let statusCode = 500;
+    let message = "Something went wrong.";
+
     if (err.toJSON) {
       const errorResponse = err.toJSON();
-      return res.status(errorResponse.statusCode).json(errorResponse);
+      if (errorResponse.statusCode) {
+        statusCode = errorResponse.statusCode;
+      }
+      if (errorResponse?.error?.message) {
+        message = errorResponse.error.message;
+      }
+      return res.status(statusCode).json(errorResponse);
     }
 
     console.log("Error Log: ", err);
@@ -84,6 +94,7 @@ const HttpExceptions = {
   Conflict,
   CustomError,
   ExceptionHandler,
+  InternalServerError,
 };
 
 export default HttpExceptions;
